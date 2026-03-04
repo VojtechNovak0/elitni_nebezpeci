@@ -1,7 +1,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    background: #fff;
+    background: #0a0a1a;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -15,3 +15,96 @@ canvas {
     image-rendering: pixelated;
     cursor: none;
 }
+
+/* ── Auth overlay ─────────────────────────────────────────────────────────── */
+
+#authOverlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a1a;
+    z-index: 100;
+}
+
+#authBox {
+    background: #111128;
+    border: 1px solid #2a2a5a;
+    border-radius: 10px;
+    padding: 40px 36px;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 0 40px rgba(80, 80, 255, 0.15);
+}
+
+#authBox h1 {
+    color: #c8d0ff;
+    font-family: monospace;
+    font-size: 1.4rem;
+    text-align: center;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#authForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#authForm input {
+    background: #0d0d22;
+    border: 1px solid #2a2a5a;
+    border-radius: 6px;
+    color: #c8d0ff;
+    font-family: monospace;
+    font-size: 0.95rem;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+#authForm input:focus {
+    border-color: #5555cc;
+}
+
+#authSubmit {
+    margin-top: 4px;
+    background: #2a2a88;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 1rem;
+    padding: 11px;
+    transition: background 0.2s;
+    letter-spacing: 1px;
+}
+
+#authSubmit:hover:not(:disabled) { background: #3a3aaa; }
+#authSubmit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+#authMessage {
+    font-family: monospace;
+    font-size: 0.85rem;
+    min-height: 18px;
+    text-align: center;
+}
+
+#authToggle {
+    background: none;
+    border: none;
+    color: #7070dd;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 0.82rem;
+    text-align: center;
+    text-decoration: underline;
+}
+
+#authToggle:hover { color: #9090ff; }
+

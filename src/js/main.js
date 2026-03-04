@@ -115,11 +115,10 @@ class Game {
     }
 
     start() {
+        document.getElementById('gameCanvas').style.display = 'block';
         requestAnimationFrame(ts => {
             this._lastTime = ts;
             this._loop(ts);
         });
     }
 }
-
-window.addEventListener('load', () => new Game().start());
