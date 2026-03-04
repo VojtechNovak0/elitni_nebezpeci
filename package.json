@@ -1,0 +1,9 @@
+{
+  "name": "elitni-nebezpeci",
+  "version": "0.1.0",
+  "description": "2D space trading game inspired by Elite Dangerous",
+  "scripts": {
+    "start": "npx http-server src -p 8080 -o --cors"
+  },
+  "license": "MIT"
+}
