@@ -5,5 +5,8 @@
   "scripts": {
     "start": "npx http-server src -p 8080 -o --cors"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.98.0"
+  }
 }
