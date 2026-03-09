@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "description": "2D space trading game inspired by Elite Dangerous",
   "scripts": {
-    "start": "npx http-server src -p 8080 -o --cors"
+    "start": "node server.js"
   },
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",
+    "dotenv": "^16.6.1",
     "express": "^5.2.1"
   }
 }
