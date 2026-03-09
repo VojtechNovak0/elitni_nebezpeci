@@ -37,8 +37,6 @@ class Game {
     }
 
     _update(dt) {
-        this.input.update();
-
         switch (this.state) {
             case 'SPACE':        this._updateSpace(dt);              break;
             case 'APPROACH':     this.docking.updateApproach(dt);   break;
@@ -47,6 +45,9 @@ class Game {
             case 'LANDED':       this._updateLanded(dt);             break;
             case 'TRADING':      this.trading.handleInput();         break;
         }
+        // Must be at END of frame: keydown events fire between frames, so
+        // copying keys→prev here lets justDown() correctly see new presses.
+        this.input.update();
     }
 
     // ── SPACE ─────────────────────────────────────────────────────────────────

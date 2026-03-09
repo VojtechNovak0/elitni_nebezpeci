@@ -93,6 +93,9 @@ class Docking {
         if (input.isDown('ArrowDown')  || input.isDown('KeyS')) ship.addThrottle(-CONF.THROTTLE_RATE * dt);
         if (input.justDown('KeyX'))  ship.throttle = 0;
 
+        // Q abort must be checked before ring entry so it is never swallowed
+        if (input.justDown('KeyQ')) { this.abort(); return; }
+
         ship.update(dt);
 
         const st = this.targetStation;
@@ -101,10 +104,7 @@ class Docking {
         // Any contact with the ring area ports the ship directly inside
         if (d < CONF.DOCK_RING_R) {
             this._enterStation();
-            return;
         }
-
-        if (input.justDown('KeyQ')) this.abort();
     }
 
     // ── Enter station interior ────────────────────────────────────────────────
