@@ -2,7 +2,8 @@
 
 const { createClient } = window.supabase;
 
-const supabaseUrl = 'https://txzvsyfwfbvlxmadfbja.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4enZzeWZ3ZmJ2bHhtYWRmYmphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MDI2NzUsImV4cCI6MjA4ODE3ODY3NX0.a-_FS9e1Pu4BnS8mE2S4QGxOjGt2dQulxk2Rb-nkZGc';
+// Klíče jsou injektovány serverem přes /js/env-config.js
+const supabaseUrl = window.SUPABASE_URL;
+const supabaseKey = window.SUPABASE_ANON_KEY;
 
 const supabaseClient = createClient(supabaseUrl, supabaseKey);
