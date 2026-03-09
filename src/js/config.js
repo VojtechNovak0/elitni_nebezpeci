@@ -17,7 +17,7 @@ const CONF = {
     // ── Universe ──────────────────────────────────────────────────
     INIT_STATIONS:     10,
     STATION_SPREAD:    8000,  // initial universe radius (units)
-    STATION_MIN_GAP:   1000,  // minimum gap between stations
+    STATION_MIN_GAP:   1500,  // minimum gap between stations
     EXPAND_THRESHOLD:  0.65,
     EXPAND_ADD:        5,
 
@@ -25,13 +25,13 @@ const CONF = {
     C: 120,   // "speed of light" = 120 units/s for display
 
     // ── Docking ───────────────────────────────────────────────────
-    APPROACH_RANGE:     130,   // world units – triggers approach mode
+    APPROACH_RANGE:     520,   // world units – triggers approach mode
     APPROACH_MAX_SPEED: 1200,  // max speed to start docking
     DOCK_HOLD_TIME:     2.0,   // seconds to hold low speed
-    DOCK_RING_R:        44,    // docking ring radius (world units)
+    DOCK_RING_R:        176,   // docking ring radius (world units)
     PORT_GAP:           0.50,  // gap angle in docking ring (rad)
     PORT_TOLERANCE:     0.14,  // extra angular tolerance
-    APPROACH_SCALE:     3.5,   // px per world unit in approach view
+    APPROACH_SCALE:     0.875, // px per world unit in approach view
 
     // ── Station ───────────────────────────────────────────────────
     STATION_ROT_SPEED: 0.42,   // rad/s

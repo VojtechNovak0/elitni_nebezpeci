@@ -220,6 +220,98 @@ class Renderer {
         ctx.restore();
     }
 
+    // ── DOCKING_ANIM view ─────────────────────────────────────────────────────
+
+    renderDockingAnim(ctx) {
+        const { ship, docking } = this.game;
+        const W = CONF.W, H = CONF.H;
+        const st = docking.targetStation;
+        if (!st) return;
+
+        const t    = docking.animProgress;
+        // Smoothstep ease (slow start, fast middle, slow end)
+        const ease = t * t * (3 - 2 * t);
+
+        // Zoom: approach scale × 1 → × 8
+        const zoom = 1 + ease * 7;
+
+        // Slow parallax background
+        this.starField.render(ctx, st.x * 0.12, st.y * 0.12);
+
+        const cx = W / 2, cy = H / 2;
+
+        // Station: centred on screen, growing
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.scale(zoom, zoom);
+        this._drawStationApproach(ctx, st);
+        ctx.restore();
+
+        // Ship: interpolates from its entry position toward ring centre
+        const S    = CONF.APPROACH_SCALE;
+        const relX = lerp(docking._animRelX, 0, ease) * S * zoom;
+        const relY = lerp(docking._animRelY, 0, ease) * S * zoom;
+
+        // Ship fades out as it passes into the ring (t > 0.62)
+        const shipAlpha = t < 0.62 ? 1 : Math.max(0, 1 - (t - 0.62) / 0.18);
+
+        if (shipAlpha > 0) {
+            ctx.save();
+            ctx.globalAlpha = shipAlpha;
+            ctx.translate(cx + relX, cy + relY);
+            ctx.rotate(ship.angle);
+
+            const s = CONF.SHIP_SIZE;
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth   = 1.5;
+            ctx.fillStyle   = '#fff';
+            ctx.beginPath();
+            ctx.moveTo(s * 1.6,  0);
+            ctx.lineTo(-s, -s * 0.75);
+            ctx.lineTo(-s * 0.5,  0);
+            ctx.lineTo(-s,  s * 0.75);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Engine flame grows as ship accelerates into the ring
+            if (t > 0.15) {
+                const fl = s * lerp(0, 2.6, Math.min(1, (t - 0.15) / 0.5));
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.moveTo(-s * 0.5,  0);
+                ctx.lineTo(-s * 0.5 - fl, -s * 0.20);
+                ctx.lineTo(-s * 0.5 - fl,  s * 0.20);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        // Station name + DOCKING label (fades in then out)
+        const textAlpha = t < 0.4 ? t / 0.4 : t > 0.72 ? Math.max(0, 1 - (t - 0.72) / 0.14) : 1;
+        if (textAlpha > 0.01) {
+            ctx.save();
+            ctx.globalAlpha = textAlpha;
+            ctx.fillStyle   = '#000';
+            ctx.textAlign   = 'center';
+            ctx.font        = 'bold 18px "Courier New", monospace';
+            ctx.fillText('DOCKING', cx, 36);
+            ctx.font = '13px "Courier New", monospace';
+            ctx.fillText(st.name.toUpperCase(), cx, 56);
+            ctx.fillText('[Q] ABORT', cx, H - 14);
+            ctx.restore();
+        }
+
+        // White flash wipe (last 18%)
+        if (t > 0.82) {
+            const flash = (t - 0.82) / 0.18;
+            ctx.fillStyle = `rgba(255,255,255,${flash * flash})`;
+            ctx.fillRect(0, 0, W, H);
+        }
+    }
+
     // ── APPROACH view ─────────────────────────────────────────────────────────
 
     renderApproach(ctx) {

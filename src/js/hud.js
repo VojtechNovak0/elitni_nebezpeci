@@ -51,6 +51,9 @@ class HUD {
         // ── Off-screen station markers ────────────────────────────────────────
         this._offScreenMarkers(ctx);
 
+        // ── Speed gauge (bottom-right) ────────────────────────────────────────
+        this._speedGauge(ctx);
+
         // ── Docking notification ──────────────────────────────────────────────
         if (docking.msgTimer > 0) {
             ctx.textAlign = 'center';
@@ -64,7 +67,7 @@ class HUD {
         ctx.textAlign = 'center';
         ctx.fillStyle = '#777';
         ctx.font = '11px "Courier New", monospace';
-        ctx.fillText('← → ROTATE   ↑ ↓ THROTTLE   X CUT ENGINE   TAB WAYPOINT', W / 2, H - 10);
+        ctx.fillText('← → ROTATE   ↑ ↓ / SCROLL THROTTLE   X CUT ENGINE   TAB WAYPOINT', W / 2, H - 10);
         ctx.restore();
     }
 
@@ -93,7 +96,7 @@ class HUD {
         ctx.textAlign = 'center';
         ctx.fillStyle = '#777';
         ctx.font = '11px "Courier New", monospace';
-        ctx.fillText('FLY THROUGH THE PORT OPENING WHEN GAP IS ALIGNED   [ESC] ABORT', W / 2, H - 10);
+        ctx.fillText('FLY INTO THE DOCKING RING TO ENTER   [Q] ABORT', W / 2, H - 10);
         ctx.restore();
     }
 
@@ -122,8 +125,8 @@ class HUD {
         }
 
         const hint = this.game.state === 'LANDED'
-            ? '[T] TRADE   [ESC] DEPART'
-            : 'NAV TO ASSIGNED PAD   [ESC] ABORT';
+            ? '[T] TRADE   [Q] TAKE OFF'
+            : 'FLY TO A LANDING PAD   [Q] EXIT STATION';
         ctx.textAlign = 'center';
         ctx.fillStyle = '#777';
         ctx.font = '11px "Courier New", monospace';
@@ -132,6 +135,104 @@ class HUD {
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    _speedGauge(ctx) {
+        const { ship } = this.game;
+        const W = CONF.W, H = CONF.H;
+
+        // Semi-circle gauge in bottom-right corner, opening faces down
+        const cx = W - 90;
+        const cy = H - 38;
+        const r  = 58;
+
+        // Logarithmic speed ratio (0–1)
+        const speedRatio = ship.speed > 0
+            ? Math.log10(1 + ship.speed) / Math.log10(1 + CONF.MAX_SPEED)
+            : 0;
+        const thrRatio = ship.throttle;
+
+        // Arc runs counter-clockwise from 180° (left) to 0° (right) = top half
+        const arcStart = Math.PI;       // 180° – zero end
+        const arcEnd   = 0;             // 0°   – max end
+
+        ctx.save();
+        ctx.lineCap = 'butt';
+
+        // ── Outer speed arc ───────────────────────────────────────────────────
+        // Background track
+        ctx.strokeStyle = '#ddd';
+        ctx.lineWidth   = 9;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, arcStart, arcEnd, true);
+        ctx.stroke();
+
+        // Filled portion (counter-clockwise from start to (1-ratio) fraction)
+        if (speedRatio > 0) {
+            const fillEnd = Math.PI * (1 - speedRatio);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth   = 9;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, arcStart, fillEnd, true);
+            ctx.stroke();
+        }
+
+        // ── Inner throttle arc ────────────────────────────────────────────────
+        const ri = r - 16;
+        ctx.strokeStyle = '#ddd';
+        ctx.lineWidth   = 5;
+        ctx.beginPath();
+        ctx.arc(cx, cy, ri, arcStart, arcEnd, true);
+        ctx.stroke();
+
+        if (thrRatio > 0) {
+            const fillEnd = Math.PI * (1 - thrRatio);
+            ctx.strokeStyle = '#555';
+            ctx.lineWidth   = 5;
+            ctx.beginPath();
+            ctx.arc(cx, cy, ri, arcStart, fillEnd, true);
+            ctx.stroke();
+        }
+
+        // ── Tick marks at 0%, 25%, 50%, 75%, 100% ────────────────────────────
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth   = 1.5;
+        for (let i = 0; i <= 4; i++) {
+            const frac  = i / 4;
+            const tickA = Math.PI * (1 - frac);   // angle at this fraction
+            const cos   = Math.cos(tickA);
+            const sin   = Math.sin(tickA);
+            ctx.beginPath();
+            ctx.moveTo(cx + cos * (r - 13), cy + sin * (r - 13));
+            ctx.lineTo(cx + cos * (r + 2),  cy + sin * (r + 2));
+            ctx.stroke();
+        }
+
+        // ── Needle ────────────────────────────────────────────────────────────
+        const needleA = Math.PI * (1 - speedRatio);
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth   = 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(needleA) * (r - 4), cy + Math.sin(needleA) * (r - 4));
+        ctx.stroke();
+
+        // Centre dot
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // ── Labels ────────────────────────────────────────────────────────────
+        ctx.fillStyle = '#000';
+        ctx.textAlign = 'center';
+        ctx.font      = 'bold 11px "Courier New", monospace';
+        ctx.fillText(formatSpeed(ship.speed), cx, cy - 6);
+        ctx.font      = '9px "Courier New", monospace';
+        ctx.fillText('SPEED', cx, cy + 6);
+        ctx.fillText(`THR ${(ship.throttle * 100).toFixed(0)}%`, cx, cy + 17);
+
+        ctx.restore();
+    }
 
     _logBar(ctx, x, y, w, h, value, max) {
         const ratio = value > 0 ? Math.log10(1 + value) / Math.log10(1 + max) : 0;

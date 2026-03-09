@@ -12,8 +12,8 @@ const BASE_PRICES = {
 
 // Landing pad positions inside station (in interior pixel space, relative to centre)
 const PAD_POSITIONS = [
-    { x: -175, y: -110 }, { x: 0, y: -110 }, { x: 175, y: -110 },
-    { x: -175, y:  110 }, { x: 0, y:  110 }, { x: 175, y:  110 },
+    { x: -145, y: -95 }, { x: 145, y: -95 },
+    { x: -145, y:  95 }, { x: 145, y:  95 },
 ];
 
 class Station {

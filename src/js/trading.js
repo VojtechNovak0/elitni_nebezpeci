@@ -42,7 +42,7 @@ class Trading {
             this._row = (this._row + 1) % GOODS.length;
         if (inp.justDown('KeyB')) this.buy(GOODS[this._row]);
         if (inp.justDown('KeyV')) this.sell(GOODS[this._row]);
-        if (inp.justDown('Escape') || inp.justDown('KeyT'))
+        if (inp.justDown('KeyQ') || inp.justDown('KeyT'))
             this.game.state = 'LANDED';
     }
 
@@ -65,7 +65,7 @@ class Trading {
 
         ctx.font = '13px "Courier New", monospace';
         ctx.fillText(`CREDITS: ${this.credits} Cr   │   CARGO: ${this.cargoSize} / ${CONF.HOLD_CAP}`, W / 2, 100);
-        ctx.fillText('[↑↓] SELECT   [B] BUY 1   [V] SELL 1   [ESC / T] CLOSE', W / 2, 118);
+        ctx.fillText('[↑↓] SELECT   [B] BUY 1   [V] SELL 1   [Q / T] CLOSE', W / 2, 118);
 
         // Separator
         ctx.beginPath();

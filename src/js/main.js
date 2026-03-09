@@ -40,11 +40,12 @@ class Game {
         this.input.update();
 
         switch (this.state) {
-            case 'SPACE':    this._updateSpace(dt);              break;
-            case 'APPROACH': this.docking.updateApproach(dt);   break;
-            case 'INSIDE':   this.docking.updateInside(dt);     break;
-            case 'LANDED':   this._updateLanded(dt);             break;
-            case 'TRADING':  this.trading.handleInput();         break;
+            case 'SPACE':        this._updateSpace(dt);              break;
+            case 'APPROACH':     this.docking.updateApproach(dt);   break;
+            case 'DOCKING_ANIM': this.docking.updateDockingAnim(dt); break;
+            case 'INSIDE':       this.docking.updateInside(dt);     break;
+            case 'LANDED':       this._updateLanded(dt);             break;
+            case 'TRADING':      this.trading.handleInput();         break;
         }
     }
 
@@ -60,13 +61,20 @@ class Game {
         if (input.justDown('KeyX'))  ship.throttle = 0;
         if (input.justDown('Tab'))   universe.cycleWaypoint();
 
+        // Mouse wheel controls throttle (forward = +, backward = -)
+        if (input.wheelDelta !== 0)
+            ship.addThrottle(-input.wheelDelta * 0.0005);
+
         ship.update(dt);
 
         // Dynamic zoom: slow → zoomed in, fast → zoomed out
         const speedRatio = ship.speed / (ship.speed + CONF.ZOOM_SPEED_SCALE);
         const tgtZoom    = CONF.BASE_ZOOM * (1 - speedRatio * 0.9985);
         camera.setTargetZoom(Math.max(CONF.MIN_ZOOM, tgtZoom));
-        camera.follow(ship.x, ship.y, dt);
+
+        // Ship is always fixed at screen centre – camera snaps instantly to ship
+        camera.x = ship.x;
+        camera.y = ship.y;
         camera.updateZoom(dt);
 
         universe.update(dt);
@@ -80,7 +88,7 @@ class Game {
         const { input, docking } = this;
         if (docking.msgTimer > 0) docking.msgTimer -= dt;
         if (input.justDown('KeyT'))   this.state = 'TRADING';
-        if (input.justDown('Escape')) docking.depart();
+        if (input.justDown('KeyQ')) docking.takeoff();   // take off → back to INSIDE
     }
 
     // ── Render ────────────────────────────────────────────────────────────────
@@ -99,6 +107,10 @@ class Game {
             case 'APPROACH':
                 this.renderer.renderApproach(ctx);
                 this.hud.renderApproach(ctx);
+                break;
+
+            case 'DOCKING_ANIM':
+                this.renderer.renderDockingAnim(ctx);
                 break;
 
             case 'INSIDE':
