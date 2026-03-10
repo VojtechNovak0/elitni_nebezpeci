@@ -2,19 +2,13 @@
 
 body {
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
     background: #0a0a1a;
 =======
-=======
->>>>>>> Stashed changes
 <<<<<<< HEAD
     background: #000;
 =======
     background: #0a0a1a;
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
     overflow: hidden;
     display: flex;
@@ -37,18 +31,12 @@ canvas {
     position: fixed;
     inset: 0;
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 =======
-=======
->>>>>>> Stashed changes
 <<<<<<< HEAD
     background: #000;
     display: flex;
     align-items: center;
     justify-content: center;
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     display: flex;
@@ -56,10 +44,6 @@ canvas {
     justify-content: center;
     background: #0a0a1a;
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
->>>>>>> Stashed changes
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
 >>>>>>> Stashed changes
@@ -68,10 +52,7 @@ canvas {
 
 #authBox {
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 =======
-=======
->>>>>>> Stashed changes
 <<<<<<< HEAD
     background: #0a0a0a;
     border: 1px solid #333;
@@ -120,9 +101,6 @@ canvas {
     border-color: #888;
     color: #fff;
 =======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
     background: #111128;
     border: 1px solid #2a2a5a;
@@ -143,10 +121,6 @@ canvas {
     letter-spacing: 2px;
     text-transform: uppercase;
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
->>>>>>> Stashed changes
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
 >>>>>>> Stashed changes
@@ -156,10 +130,7 @@ canvas {
     display: flex;
     flex-direction: column;
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 =======
-=======
->>>>>>> Stashed changes
 <<<<<<< HEAD
     gap: 12px;
 }
@@ -172,9 +143,6 @@ canvas {
     padding: 10px 12px;
     font-family: inherit;
     font-size: 0.9rem;
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     gap: 10px;
@@ -189,10 +157,6 @@ canvas {
     font-size: 0.95rem;
     padding: 10px 12px;
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
->>>>>>> Stashed changes
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
 >>>>>>> Stashed changes
@@ -202,10 +166,7 @@ canvas {
 
 #authForm input:focus {
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 =======
-=======
->>>>>>> Stashed changes
 <<<<<<< HEAD
     border-color: #666;
 }
@@ -241,9 +202,6 @@ canvas {
     opacity: 0.5;
     cursor: default;
 }
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     border-color: #5555cc;
@@ -287,10 +245,6 @@ canvas {
 #authToggle:hover { color: #9090ff; }
 
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
->>>>>>> Stashed changes
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
 >>>>>>> Stashed changes

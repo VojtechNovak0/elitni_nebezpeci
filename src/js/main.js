@@ -136,10 +136,7 @@ class Game {
     }
 }
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
 =======
-=======
->>>>>>> Stashed changes
 <<<<<<< HEAD
 
 window.addEventListener('load', async () => {
@@ -205,7 +202,4 @@ window.addEventListener('load', async () => {
 });
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
 >>>>>>> Stashed changes
