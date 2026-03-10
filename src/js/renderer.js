@@ -176,8 +176,10 @@ class Renderer {
         const ringR = Math.max(CONF.DOCK_RING_R, minR * 3);
         const lw    = Math.max(0.5, (isSelected ? 2.5 : 1.5) / this.game.camera.zoom);
 
-        ctx.strokeStyle = '#000';
-        ctx.fillStyle   = '#fff';
+        // Use station type colour for selected, grey for unselected
+        const typeCol = stationTypeColor(st.type);
+        ctx.strokeStyle = isSelected ? typeCol : '#555';
+        ctx.fillStyle   = isSelected ? typeCol + '22' : '#fff';
         ctx.lineWidth   = lw;
 
         // Station body (rotates with station)
@@ -211,7 +213,7 @@ class Renderer {
         const labelY = scr.y - ringR * cam.zoom - 8;
 
         ctx.save();
-        ctx.fillStyle = isSelected ? '#000' : '#666';
+        ctx.fillStyle = isSelected ? stationTypeColor(st.type) : '#666';
         ctx.font = isSelected
             ? 'bold 11px "Courier New", monospace'
             : '10px "Courier New", monospace';
@@ -448,12 +450,14 @@ class Renderer {
         ctx.fillRect(cx - IW / 2, cy - IH / 2, IW, IH);
         ctx.strokeRect(cx - IW / 2, cy - IH / 2, IW, IH);
 
-        // Station name header
+        // Station name header + type badge
         ctx.fillStyle = '#000';
         ctx.font = 'bold 13px "Courier New", monospace';
         ctx.textAlign = 'center';
         ctx.fillText(st.name.toUpperCase(), cx, cy - IH / 2 - 26);
-        ctx.fillText('INTERIOR', cx, cy - IH / 2 - 10);
+        ctx.fillStyle = stationTypeColor(st.type);
+        ctx.font = 'bold 11px "Courier New", monospace';
+        ctx.fillText(`[ ${TYPE_LABEL[st.type]} ]`, cx, cy - IH / 2 - 10);
 
         // Entrance slot at bottom
         ctx.fillStyle = '#fff';
@@ -461,18 +465,20 @@ class Renderer {
         ctx.fillStyle = '#aaa';
         ctx.fillRect(cx - 28, cy + IH / 2 - 3, 56, 5);
 
-        // Blinking assigned pad
+        // Blinking timer (shared)
         const blink = Math.sin(docking._blinkTimer * 4) > 0;
 
-        // Landing pads
+        // Landing pads – highlight free pads, dim occupied ones
         for (const pad of st.pads) {
             const px    = cx + pad.x;
             const py    = cy + pad.y;
-            const isSel = docking.assignedPad?.id === pad.id;
+            const isSel  = docking.assignedPad?.id === pad.id;
+            const isFree = !pad.occupied || pad.shipId === 'player';
 
-            ctx.fillStyle   = isSel ? (blink ? '#cce' : '#dde') : '#e2e2e2';
-            ctx.strokeStyle = '#000';
-            ctx.lineWidth   = isSel ? 2.5 : 1;
+            ctx.fillStyle   = isSel ? (blink ? '#cce' : '#dde')
+                            : isFree ? '#e8f0e8' : '#ddd';
+            ctx.strokeStyle = isSel ? '#00c' : isFree ? '#484' : '#999';
+            ctx.lineWidth   = isSel ? 2.5 : isFree ? 1.5 : 1;
             ctx.fillRect(px - 28, py - 22, 56, 44);
             ctx.strokeRect(px - 28, py - 22, 56, 44);
 

@@ -15,11 +15,12 @@ const CONF = {
     ZOOM_SPEED_SCALE: 12000,  // speed at which zoom halves
 
     // ── Universe ──────────────────────────────────────────────────
-    INIT_STATIONS:     10,
-    STATION_SPREAD:    8000,  // initial universe radius (units)
-    STATION_MIN_GAP:   1500,  // minimum gap between stations
-    EXPAND_THRESHOLD:  0.65,
-    EXPAND_ADD:        5,
+    INIT_STATIONS:          10,
+    STATION_SPREAD:         8000,  // initial universe radius (units)
+    STATION_MIN_GAP:        1500,  // minimum gap between stations
+    STATION_MIN_DIST_ORIGIN: 2500, // stations won't spawn this close to (0,0)
+    EXPAND_THRESHOLD:       0.65,
+    EXPAND_ADD:             5,
 
     // ── Speed display ─────────────────────────────────────────────
     C: 120,   // "speed of light" = 120 units/s for display
@@ -47,6 +48,20 @@ const CONF = {
     // ── Trade ─────────────────────────────────────────────────────
     HOLD_CAP:      40,
     START_CREDITS: 1200,
+
+    // ── Fuel ──────────────────────────────────────────────────────
+    FUEL_CAP:       100,       // default max fuel
+    FUEL_BURN_RATE: 0.0020,    // fuel units per second at full throttle
+
+    // ── Ship Upgrades ─────────────────────────────────────────────
+    SHIP_UPGRADES: [
+        { id: 'engine2',  name: 'Engine Mk.II',      cost:  8000, desc: '+30% thrust & top speed',  requires: null,      types: ['TRADE','MILITARY','INDUSTRIAL'] },
+        { id: 'engine3',  name: 'Engine Mk.III',     cost: 22000, desc: '+60% thrust & top speed',  requires: 'engine2', types: ['MILITARY','INDUSTRIAL'] },
+        { id: 'shields2', name: 'Shield Booster',    cost:  5000, desc: 'Max shields +50',           requires: null,      types: ['TRADE','MILITARY'] },
+        { id: 'hull2',    name: 'Hull Plating',      cost:  4000, desc: 'Max hull +50',              requires: null,      types: ['TRADE','INDUSTRIAL'] },
+        { id: 'fuel2',    name: 'Ext. Fuel Tank',    cost:  7000, desc: 'Fuel capacity ×2',          requires: null,      types: ['TRADE','INDUSTRIAL','FUEL_DEPOT'] },
+        { id: 'cargo2',   name: 'Cargo Expansion',   cost:  6000, desc: 'Hold +20 units',            requires: null,      types: ['TRADE'] },
+    ],
 
     // ── AI ────────────────────────────────────────────────────────
     AI_PER_STATION: 2,

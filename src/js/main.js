@@ -8,7 +8,7 @@ class Game {
         this.canvas.height = CONF.H;
 
         // Game state
-        this.state = 'SPACE'; // SPACE | APPROACH | INSIDE | LANDED | TRADING
+        this.state = 'SPACE'; // SPACE | APPROACH | DOCKING_ANIM | INSIDE | LANDED | TRADING | MAP
 
         // Systems
         this.input    = new Input();
@@ -19,6 +19,7 @@ class Game {
         this.trading  = new Trading(this);
         this.hud      = new HUD(this);
         this.renderer = new Renderer(this);
+        this.galaxyMap = new GalaxyMap(this);
 
         this._lastTime = 0;
 
@@ -38,12 +39,13 @@ class Game {
 
     _update(dt) {
         switch (this.state) {
-            case 'SPACE':        this._updateSpace(dt);              break;
-            case 'APPROACH':     this.docking.updateApproach(dt);   break;
+            case 'SPACE':        this._updateSpace(dt);               break;
+            case 'APPROACH':     this.docking.updateApproach(dt);    break;
             case 'DOCKING_ANIM': this.docking.updateDockingAnim(dt); break;
-            case 'INSIDE':       this.docking.updateInside(dt);     break;
-            case 'LANDED':       this._updateLanded(dt);             break;
-            case 'TRADING':      this.trading.handleInput();         break;
+            case 'INSIDE':       this.docking.updateInside(dt);      break;
+            case 'LANDED':       this._updateLanded(dt);              break;
+            case 'TRADING':      this.trading.handleInput();          break;
+            case 'MAP':          this.galaxyMap.handleInput();        break;
         }
         // Must be at END of frame: keydown events fire between frames, so
         // copying keys→prev here lets justDown() correctly see new presses.
@@ -61,6 +63,7 @@ class Game {
         if (input.isDown('ArrowDown')  || input.isDown('KeyS')) ship.addThrottle(-CONF.THROTTLE_RATE * dt);
         if (input.justDown('KeyX'))  ship.throttle = 0;
         if (input.justDown('Tab'))   universe.cycleWaypoint();
+        if (input.justDown('KeyM'))  this.galaxyMap.open('SPACE');
 
         // Mouse wheel controls throttle (forward = +, backward = -)
         if (input.wheelDelta !== 0)
@@ -88,8 +91,9 @@ class Game {
     _updateLanded(dt) {
         const { input, docking } = this;
         if (docking.msgTimer > 0) docking.msgTimer -= dt;
-        if (input.justDown('KeyT'))   this.state = 'TRADING';
-        if (input.justDown('KeyQ')) docking.takeoff();   // take off → back to INSIDE
+        if (input.justDown('KeyT'))  this.state = 'TRADING';
+        if (input.justDown('KeyM'))  this.galaxyMap.open('LANDED');
+        if (input.justDown('KeyQ'))  docking.takeoff();   // take off → back to INSIDE
     }
 
     // ── Render ────────────────────────────────────────────────────────────────
@@ -123,6 +127,10 @@ class Game {
             case 'TRADING':
                 this.renderer.renderInside(ctx);
                 this.trading.render(ctx);
+                break;
+
+            case 'MAP':
+                this.galaxyMap.render(ctx);
                 break;
         }
     }

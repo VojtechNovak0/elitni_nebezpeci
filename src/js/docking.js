@@ -199,17 +199,32 @@ class Docking {
             return;
         }
 
-        // Check landing on assigned pad
-        if (!this.onPad && this.assignedPad) {
-            const pad = this.assignedPad;
-            const dx  = this.ip.x - pad.x;
-            const dy  = this.ip.y - pad.y;
-            if (Math.hypot(dx, dy) < 34 && spd < 40) {
-                this.onPad    = true;
-                this.iv       = { x: 0, y: 0 };
-                ship.throttle = 0;
-                this.game.state = 'LANDED';
-                this.showMsg('LANDED – [T] TRADE   [Q] TAKE OFF', 8);
+        // Check landing on any unoccupied pad (not just the assigned one)
+        if (!this.onPad) {
+            for (const pad of st.pads) {
+                // Skip pads occupied by AI ships
+                if (pad.occupied && pad.shipId !== 'player') continue;
+                const dx = this.ip.x - pad.x;
+                const dy = this.ip.y - pad.y;
+                if (Math.hypot(dx, dy) < 34 && spd < 40) {
+                    // If landing on a different pad than assigned, re-assign
+                    if (this.assignedPad && this.assignedPad.id !== pad.id) {
+                        st.releasePad('player');
+                        pad.occupied = true;
+                        pad.shipId   = 'player';
+                        this.assignedPad = pad;
+                    } else if (!this.assignedPad) {
+                        pad.occupied = true;
+                        pad.shipId   = 'player';
+                        this.assignedPad = pad;
+                    }
+                    this.onPad    = true;
+                    this.iv       = { x: 0, y: 0 };
+                    ship.throttle = 0;
+                    this.game.state = 'LANDED';
+                    this.showMsg(`LANDED – PAD ${pad.id}  [T] TRADE   [Q] TAKE OFF`, 8);
+                    break;
+                }
             }
         }
 

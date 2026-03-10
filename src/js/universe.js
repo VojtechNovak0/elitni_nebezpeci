@@ -28,7 +28,8 @@ class Universe {
 
     _addStation() {
         let x, y, tries = 0;
-        const minD = CONF.STATION_MIN_GAP;
+        const minD    = CONF.STATION_MIN_GAP;
+        const minOrig = CONF.STATION_MIN_DIST_ORIGIN;
 
         do {
             const a = this._rng.next() * Math.PI * 2;
@@ -36,7 +37,10 @@ class Universe {
             x = Math.cos(a) * r;
             y = Math.sin(a) * r;
             tries++;
-        } while (tries < 60 && this.stations.some(s => dist(s.x, s.y, x, y) < minD));
+        } while (tries < 60 && (
+            dist(0, 0, x, y) < minOrig ||
+            this.stations.some(s => dist(s.x, s.y, x, y) < minD)
+        ));
 
         const name    = STATION_NAMES[this._nameIdx++ % STATION_NAMES.length];
         const station = new Station(x, y, name, this._rng.int(100, 99999));
