@@ -1,7 +1,10 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -72,6 +75,9 @@ function logoutUser() {
 =======
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -221,6 +227,10 @@ const Auth = {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
 >>>>>>> Stashed changes
