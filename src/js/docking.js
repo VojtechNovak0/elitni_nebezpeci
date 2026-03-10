@@ -236,10 +236,6 @@ class Docking {
                 this.showMsg('LANDED – [T] TRADE   [Q] TAKE OFF', 8);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
->>>>>>> Stashed changes
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
 >>>>>>> Stashed changes
