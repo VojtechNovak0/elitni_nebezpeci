@@ -91,7 +91,11 @@ class Renderer {
         ctx.translate(-camera.x, -camera.y);
 
         for (const st of universe.stations)
-            this._drawStationBody(ctx, st, st === universe.selectedWaypoint);
+            if (st !== universe.selectedWaypoint)
+                this._drawStationBody(ctx, st, false);
+        // Draw selected waypoint last so it is always on top
+        if (universe.selectedWaypoint)
+            this._drawStationBody(ctx, universe.selectedWaypoint, true);
 
         ctx.restore();
 
@@ -99,9 +103,12 @@ class Renderer {
         for (const ai of universe.aiShips)
             this._drawAIShipFixed(ctx, ai);
 
-        // Screen-space labels
+        // Screen-space labels (non-selected first, selected on top)
         for (const st of universe.stations)
-            this._drawStationLabel(ctx, st, st === universe.selectedWaypoint);
+            if (st !== universe.selectedWaypoint)
+                this._drawStationLabel(ctx, st, false);
+        if (universe.selectedWaypoint)
+            this._drawStationLabel(ctx, universe.selectedWaypoint, true);
 
         // Player ship always at screen centre (camera follows ship with lag)
         this._drawPlayerShipFixed(ctx, ship);
@@ -173,7 +180,7 @@ class Renderer {
         ctx.translate(st.x, st.y);
 
         const minR  = 5  / this.game.camera.zoom;
-        const ringR = Math.max(CONF.DOCK_RING_R, minR * 3);
+        const ringR = Math.max(CONF.DOCK_RING_R, minR * 3) * (isSelected ? 1.4 : 1.0);
         const lw    = Math.max(0.5, (isSelected ? 2.5 : 1.5) / this.game.camera.zoom);
 
         ctx.strokeStyle = '#000';

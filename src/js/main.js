@@ -135,3 +135,71 @@ class Game {
         });
     }
 }
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+
+window.addEventListener('load', async () => {
+    const overlay = document.getElementById('authOverlay');
+    const canvas  = document.getElementById('gameCanvas');
+    const form    = document.getElementById('authForm');
+    const emailEl = document.getElementById('authEmail');
+    const passEl  = document.getElementById('authPassword');
+    const errorEl = document.getElementById('authError');
+    const submitBtn = document.getElementById('authSubmit');
+    const tabs    = document.querySelectorAll('.authTab');
+
+    let mode = 'login'; // 'login' | 'register'
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            mode = tab.dataset.tab;
+            tabs.forEach(t => t.classList.toggle('active', t === tab));
+            submitBtn.textContent = mode === 'login' ? 'Přihlásit' : 'Registrovat';
+            errorEl.textContent = '';
+        });
+    });
+
+    function startGame() {
+        overlay.style.display = 'none';
+        canvas.style.display  = 'block';
+        try {
+            new Game().start();
+        } catch (err) {
+            console.error('Chyba spuštění hry:', err);
+            // Zobraz overlay znovu s chybou
+            overlay.style.display = 'flex';
+            canvas.style.display  = 'none';
+            errorEl.textContent   = 'Chyba spuštění hry: ' + err.message;
+            submitBtn.disabled    = false;
+            submitBtn.textContent = 'Přihlásit';
+        }
+    }
+
+    // Zkontroluj existující session
+    const existing = getCurrentUser();
+    if (existing) { startGame(); return; }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorEl.textContent = '';
+        submitBtn.disabled  = true;
+        submitBtn.textContent = 'Čekám…';
+
+        try {
+            if (mode === 'login') {
+                await loginUser(emailEl.value.trim(), passEl.value);
+            } else {
+                await registerUser(emailEl.value.trim(), passEl.value);
+            }
+            startGame();
+        } catch (err) {
+            errorEl.textContent = err.message || 'Chyba přihlášení';
+            submitBtn.disabled  = false;
+            submitBtn.textContent = mode === 'login' ? 'Přihlásit' : 'Registrovat';
+        }
+    });
+});
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes

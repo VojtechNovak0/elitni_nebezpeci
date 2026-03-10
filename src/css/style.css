@@ -1,7 +1,15 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
+<<<<<<< Updated upstream
     background: #0a0a1a;
+=======
+<<<<<<< HEAD
+    background: #000;
+=======
+    background: #0a0a1a;
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -21,14 +29,78 @@ canvas {
 #authOverlay {
     position: fixed;
     inset: 0;
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+=======
+>>>>>>> Stashed changes
     display: flex;
     align-items: center;
     justify-content: center;
     background: #0a0a1a;
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
     z-index: 100;
 }
 
 #authBox {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 40px 36px;
+    width: 340px;
+    color: #ccc;
+    text-align: center;
+}
+
+#authBox h1 {
+    font-size: 1.4rem;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+#authSubtitle {
+    font-size: 0.75rem;
+    color: #555;
+    margin-bottom: 24px;
+}
+
+#authTabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.authTab {
+    background: none;
+    border: 1px solid #333;
+    color: #666;
+    padding: 6px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+
+.authTab.active,
+.authTab:hover {
+    border-color: #888;
+    color: #fff;
+=======
+>>>>>>> Stashed changes
     background: #111128;
     border: 1px solid #2a2a5a;
     border-radius: 10px;
@@ -47,11 +119,31 @@ canvas {
     text-align: center;
     letter-spacing: 2px;
     text-transform: uppercase;
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
 }
 
 #authForm {
     display: flex;
     flex-direction: column;
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    gap: 12px;
+}
+
+#authForm input {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: #fff;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.9rem;
+=======
+>>>>>>> Stashed changes
     gap: 10px;
 }
 
@@ -63,11 +155,54 @@ canvas {
     font-family: monospace;
     font-size: 0.95rem;
     padding: 10px 12px;
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
     outline: none;
     transition: border-color 0.2s;
 }
 
 #authForm input:focus {
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+    border-color: #666;
+}
+
+#authError {
+    color: #c0392b;
+    font-size: 0.78rem;
+    min-height: 18px;
+    text-align: left;
+}
+
+#authSubmit {
+    background: #1a1a2e;
+    border: 1px solid #446;
+    color: #aaf;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    margin-top: 4px;
+}
+
+#authSubmit:hover {
+    background: #22224a;
+    border-color: #88f;
+    color: #fff;
+}
+
+#authSubmit:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+=======
+>>>>>>> Stashed changes
     border-color: #5555cc;
 }
 
@@ -108,3 +243,7 @@ canvas {
 
 #authToggle:hover { color: #9090ff; }
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes

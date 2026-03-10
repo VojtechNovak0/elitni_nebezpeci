@@ -6,6 +6,37 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+
+    <!-- Přihlašovací overlay -->
+    <div id="authOverlay">
+        <div id="authBox">
+            <h1>Elitní Nebezpečí</h1>
+            <p id="authSubtitle">Přihlas se pro vstup do vesmíru</p>
+
+            <div id="authTabs">
+                <button class="authTab active" data-tab="login">Přihlásit</button>
+                <button class="authTab" data-tab="register">Registrovat</button>
+            </div>
+
+            <form id="authForm">
+                <input type="text" id="authEmail" placeholder="Uživatelské jméno" required autocomplete="username">
+                <input type="password" id="authPassword" placeholder="Heslo" required autocomplete="current-password">
+                <p id="authError"></p>
+                <button type="submit" id="authSubmit">Přihlásit</button>
+            </form>
+        </div>
+    </div>
+
+    <canvas id="gameCanvas" style="display:none;"></canvas>
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/auth.js"></script>
+=======
+>>>>>>> Stashed changes
     <!-- Auth overlay -->
     <div id="authOverlay" data-mode="login">
         <div id="authBox">
@@ -27,6 +58,10 @@
     <!-- Konfigurace ze serveru (klíče z .env) -->
     <script src="/js/env-config.js"></script>
     <script src="js/supabase-client.js"></script>
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/input.js"></script>

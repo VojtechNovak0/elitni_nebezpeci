@@ -199,6 +199,30 @@ class Docking {
             return;
         }
 
+<<<<<<< HEAD
+        // Check landing on any free pad (or assigned pad)
+        if (!this.onPad) {
+            const pads = this.targetStation ? this.targetStation.pads : [];
+            for (const pad of pads) {
+                if (pad.occupied && pad.shipId !== 'player') continue;
+                const dx = this.ip.x - pad.x;
+                const dy = this.ip.y - pad.y;
+                if (Math.hypot(dx, dy) < 28 && spd < 28) {
+                    // Release previously assigned pad and claim this one
+                    if (this.assignedPad && this.assignedPad.id !== pad.id) {
+                        this.targetStation.releasePad('player');
+                        pad.occupied = true;
+                        pad.shipId   = 'player';
+                    }
+                    this.assignedPad  = pad;
+                    this.onPad        = true;
+                    this.iv           = { x: 0, y: 0 };
+                    ship.throttle     = 0;
+                    this.game.state   = 'LANDED';
+                    this.showMsg(`LANDED PAD ${pad.id} – [T] TRADE   [ESC] DEPART`, 8);
+                    break;
+                }
+=======
         // Check landing on assigned pad
         if (!this.onPad && this.assignedPad) {
             const pad = this.assignedPad;
@@ -210,6 +234,10 @@ class Docking {
                 ship.throttle = 0;
                 this.game.state = 'LANDED';
                 this.showMsg('LANDED – [T] TRADE   [Q] TAKE OFF', 8);
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
             }
         }
 
