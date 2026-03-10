@@ -1,3 +1,70 @@
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+// auth.js – Supabase inicializace a přihlášení (vlastní tabulka users)
+
+const SUPABASE_URL = 'https://txzvsyfwfbvlxmadfbja.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR4enZzeWZ3ZmJ2bHhtYWRmYmphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MDI2NzUsImV4cCI6MjA4ODE3ODY3NX0.a-_FS9e1Pu4BnS8mE2S4QGxOjGt2dQulxk2Rb-nkZGc';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const SESSION_KEY = 'elitni_user';
+
+// Vrátí přihlášeného uživatele z sessionStorage nebo null
+function getCurrentUser() {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+}
+
+// Přihlášení uživatelským jménem + heslem
+async function loginUser(username, password) {
+    const { data, error } = await supabase
+        .from('users')
+        .select('id, username')
+        .eq('username', username)
+        .eq('password', password)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Supabase login error:', error);
+        throw new Error(error.message || 'Chyba dotazu na databázi');
+    }
+    if (!data) throw new Error('Špatné uživatelské jméno nebo heslo');
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+    return data;
+}
+
+// Registrace nového uživatele
+async function registerUser(username, password) {
+    // Zkontroluj zda jméno již existuje
+    const { data: existing } = await supabase
+        .from('users')
+        .select('id')
+        .eq('username', username)
+        .maybeSingle();
+
+    if (existing) throw new Error('Uživatelské jméno je již obsazeno');
+
+    const { data, error } = await supabase
+        .from('users')
+        .insert({ username, password })
+        .select('id, username')
+        .single();
+
+    if (error) {
+        console.error('Supabase register error:', error);
+        throw new Error(error.message || 'Registrace selhala');
+    }
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
+    return data;
+}
+
+// Odhlášení
+function logoutUser() {
+    sessionStorage.removeItem(SESSION_KEY);
+}
+=======
+>>>>>>> Stashed changes
 // auth.js – Registrace a přihlášení přes vlastní tabulku elitni_nebezeci
 
 const Auth = {
@@ -139,3 +206,7 @@ const Auth = {
     }
 };
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
