@@ -1,5 +1,8 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
 // auth.js – Supabase inicializace a přihlášení (vlastní tabulka users)
 
@@ -63,6 +66,9 @@ async function registerUser(username, password) {
 function logoutUser() {
     sessionStorage.removeItem(SESSION_KEY);
 }
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 // auth.js – Registrace a přihlášení přes vlastní tabulku elitni_nebezeci
@@ -207,6 +213,10 @@ const Auth = {
 };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
+>>>>>>> Stashed changes
 =======
 >>>>>>> 616b55d6d65a9a66123e566934806b6857a6f18a
 >>>>>>> Stashed changes
