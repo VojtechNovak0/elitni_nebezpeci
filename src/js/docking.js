@@ -21,6 +21,10 @@ class Docking {
 
         // Blink timer for assigned-pad highlight
         this._blinkTimer = 0;
+
+        // Station communication panel (shown after entering interior)
+        this.stationCommsRows  = [];
+        this.stationCommsTimer = 0;
     }
 
     // ── Public helpers ────────────────────────────────────────────────────────
@@ -28,6 +32,10 @@ class Docking {
     showMsg(text, duration = 4) {
         this.msg      = text;
         this.msgTimer = duration;
+    }
+
+    tickStationComms(dt) {
+        if (this.stationCommsTimer > 0) this.stationCommsTimer -= dt;
     }
 
     // ── SPACE: check whether approach should be triggered ─────────────────────
@@ -141,8 +149,21 @@ class Docking {
         this.ia    = -Math.PI / 2;
         this.onPad = false;
         this.game.ship.throttle = 0;   // reset throttle on entry
+        this._openStationComms();
         this.game.state = 'INSIDE';
         this.showMsg(`INSIDE ${this.targetStation.name.toUpperCase()} – NAV TO PAD ${this.assignedPad.id}`, 5);
+    }
+
+    _openStationComms() {
+        if (!this.targetStation) return;
+        const assignedId = this.assignedPad?.id ?? null;
+        this.stationCommsRows = this.targetStation.pads
+            .filter(pad => !pad.occupied || pad.shipId === 'player')
+            .map(pad => ({
+                id: pad.id,
+                status: assignedId === pad.id ? 'ASSIGNED' : 'FREE',
+            }));
+        this.stationCommsTimer = CONF.STATION_COMMS_TIME;
     }
 
     // ── INSIDE: manoeuvre to assigned pad ────────────────────────────────────
@@ -152,6 +173,7 @@ class Docking {
         const st = this.targetStation;
         if (!st) return;
         if (this.msgTimer > 0) this.msgTimer -= dt;
+        this.tickStationComms(dt);
         this._blinkTimer += dt;
 
         // Controls (throttle half-rate inside)
@@ -268,6 +290,8 @@ class Docking {
         ship.throttle      = 0;
         this.targetStation = null;
         this.assignedPad   = null;
+        this.stationCommsRows  = [];
+        this.stationCommsTimer = 0;
         this.onPad         = false;
         this.holdTimer     = 0;
         this.game.state    = 'SPACE';

@@ -33,6 +33,7 @@ const CONF = {
     PORT_GAP:           0.50,  // gap angle in docking ring (rad)
     PORT_TOLERANCE:     0.14,  // extra angular tolerance
     APPROACH_SCALE:     0.875, // px per world unit in approach view
+    STATION_COMMS_TIME: 7.0,   // seconds to show free depot table on entry
 
     // ── Station ───────────────────────────────────────────────────
     STATION_ROT_SPEED: 0.42,   // rad/s

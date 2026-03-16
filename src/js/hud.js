@@ -164,6 +164,10 @@ class HUD {
             ctx.fillText(`[ ${TYPE_LABEL[st.type]} ]`, W - 16, 44);
         }
 
+        if (docking.stationCommsTimer > 0) {
+            this._renderStationComms(ctx, docking, W);
+        }
+
         if (docking.msgTimer > 0) {
             ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
@@ -341,5 +345,46 @@ class HUD {
             ctx.fill();
             ctx.restore();
         }
+    }
+
+    _renderStationComms(ctx, docking, W) {
+        const rows = docking.stationCommsRows || [];
+        const rowCount = Math.max(1, rows.length);
+        const boxW = 280;
+        const boxH = 78 + rowCount * 22;
+        const x = W - boxW - 14;
+        const y = 62;
+
+        ctx.save();
+        ctx.fillStyle = 'rgba(255,255,255,0.95)';
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 1.5;
+        ctx.fillRect(x, y, boxW, boxH);
+        ctx.strokeRect(x, y, boxW, boxH);
+
+        ctx.fillStyle = '#000';
+        ctx.textAlign = 'left';
+        ctx.font = 'bold 12px "Courier New", monospace';
+        ctx.fillText('STATION COMMS: FREE DEPOTS', x + 10, y + 20);
+
+        ctx.font = '11px "Courier New", monospace';
+        ctx.fillText('DEPOT', x + 12, y + 42);
+        ctx.fillText('STATUS', x + 120, y + 42);
+        ctx.beginPath();
+        ctx.moveTo(x + 10, y + 47);
+        ctx.lineTo(x + boxW - 10, y + 47);
+        ctx.stroke();
+
+        if (rows.length === 0) {
+            ctx.fillText('NONE AVAILABLE', x + 12, y + 68);
+        } else {
+            rows.forEach((row, i) => {
+                const yy = y + 68 + i * 22;
+                ctx.fillText(String(row.id), x + 20, yy);
+                ctx.fillText(row.status, x + 120, yy);
+            });
+        }
+
+        ctx.restore();
     }
 }
