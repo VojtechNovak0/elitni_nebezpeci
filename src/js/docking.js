@@ -285,6 +285,45 @@ class Docking {
         }
     }
 
+    emergencyRescueToStation(station) {
+        if (!station) return;
+
+        const freePads = station.getFreePads();
+        let pad = freePads[Math.floor(Math.random() * freePads.length)];
+        if (!pad) {
+            station.randomizePadOccupancy();
+            const refreshed = station.getFreePads();
+            pad = refreshed[Math.floor(Math.random() * refreshed.length)] || station.pads[0];
+        }
+
+        if (pad.shipId && pad.shipId !== 'player') {
+            pad.shipId = null;
+        }
+        pad.occupied = true;
+        pad.shipId   = 'player';
+
+        this.targetStation = station;
+        this.assignedPad   = pad;
+        this.onPad         = true;
+        this.holdTimer     = 0;
+        this.stationCommsRows  = [];
+        this.stationCommsTimer = 0;
+
+        this.ip = { x: pad.x, y: pad.y };
+        this.iv = { x: 0, y: 0 };
+        this.ia = -Math.PI / 2;
+
+        const { ship } = this.game;
+        ship.throttle = 0;
+        ship.vx = 0;
+        ship.vy = 0;
+        ship.x = station.x;
+        ship.y = station.y;
+
+        this.game.state = 'LANDED';
+        this.showMsg(`EMERGENCY TOW – DOCKED AT ${station.name.toUpperCase()}  [T] TRADE`, 8);
+    }
+
     // ── Takeoff from pad → back to flying inside ──────────────────────────────
 
     takeoff() {

@@ -71,6 +71,12 @@ class Game {
 
         ship.update(dt);
 
+        if (ship.fuel <= 0) {
+            const nearest = universe.nearestStation(ship.x, ship.y);
+            docking.emergencyRescueToStation(nearest);
+            return;
+        }
+
         // Dynamic zoom: slow → zoomed in, fast → zoomed out
         const speedRatio = ship.speed / (ship.speed + CONF.ZOOM_SPEED_SCALE);
         const tgtZoom    = CONF.BASE_ZOOM * (1 - speedRatio * 0.9985);
