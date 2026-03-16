@@ -164,7 +164,7 @@ class HUD {
             ctx.fillText(`[ ${TYPE_LABEL[st.type]} ]`, W - 16, 44);
         }
 
-        if (docking.stationCommsTimer > 0) {
+        if (this.game.state === 'INSIDE' && docking.stationCommsTimer > 0) {
             this._renderStationComms(ctx, docking, W);
         }
 
@@ -381,7 +381,7 @@ class HUD {
             rows.forEach((row, i) => {
                 const yy = y + 68 + i * 22;
                 ctx.fillText(String(row.id), x + 20, yy);
-                ctx.fillText(row.status, x + 120, yy);
+                ctx.fillText('FREE', x + 120, yy);
             });
         }
 

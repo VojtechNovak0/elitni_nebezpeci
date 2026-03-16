@@ -91,7 +91,6 @@ class Game {
     _updateLanded(dt) {
         const { input, docking } = this;
         if (docking.msgTimer > 0) docking.msgTimer -= dt;
-        docking.tickStationComms(dt);
         if (input.justDown('KeyT'))  this.state = 'TRADING';
         if (input.justDown('KeyM'))  this.galaxyMap.open('LANDED');
         if (input.justDown('KeyQ'))  docking.takeoff();   // take off → back to INSIDE

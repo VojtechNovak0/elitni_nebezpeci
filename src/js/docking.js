@@ -74,7 +74,9 @@ class Docking {
     // ── Initiate approach to a station ────────────────────────────────────────
 
     _initiateApproach(station) {
-        const pad = station.assignPad('player');
+        station.randomizePadOccupancy();
+        const freePads = station.getFreePads();
+        const pad = freePads[Math.floor(Math.random() * freePads.length)];
         if (!pad) {
             this.showMsg('STATION FULL – DOCKING DENIED', 4);
             this.holdTimer = 0;
@@ -156,12 +158,11 @@ class Docking {
 
     _openStationComms() {
         if (!this.targetStation) return;
-        const assignedId = this.assignedPad?.id ?? null;
         this.stationCommsRows = this.targetStation.pads
-            .filter(pad => !pad.occupied || pad.shipId === 'player')
+            .filter(pad => !pad.occupied)
             .map(pad => ({
                 id: pad.id,
-                status: assignedId === pad.id ? 'ASSIGNED' : 'FREE',
+                status: 'FREE',
             }));
         this.stationCommsTimer = CONF.STATION_COMMS_TIME;
     }
@@ -173,7 +174,6 @@ class Docking {
         const st = this.targetStation;
         if (!st) return;
         if (this.msgTimer > 0) this.msgTimer -= dt;
-        this.tickStationComms(dt);
         this._blinkTimer += dt;
 
         // Controls (throttle half-rate inside)
@@ -223,6 +223,8 @@ class Docking {
             return;
         }
 
+        this._blockOccupiedPads(st, ship);
+
         // Check landing on any unoccupied pad (not just the assigned one)
         if (!this.onPad) {
             for (const pad of st.pads) {
@@ -231,18 +233,16 @@ class Docking {
                 const dx = this.ip.x - pad.x;
                 const dy = this.ip.y - pad.y;
                 if (Math.hypot(dx, dy) < 34 && spd < 40) {
-                    // If landing on a different pad than assigned, re-assign
-                    if (this.assignedPad && this.assignedPad.id !== pad.id) {
-                        st.releasePad('player');
-                        pad.occupied = true;
-                        pad.shipId   = 'player';
-                        this.assignedPad = pad;
-                    } else if (!this.assignedPad) {
-                        pad.occupied = true;
-                        pad.shipId   = 'player';
-                        this.assignedPad = pad;
+                    const prevPlayerPad = st.pads.find(p => p.shipId === 'player');
+                    if (prevPlayerPad && prevPlayerPad.id !== pad.id) {
+                        prevPlayerPad.occupied = false;
+                        prevPlayerPad.shipId   = null;
                     }
+                    pad.occupied = true;
+                    pad.shipId   = 'player';
+                    this.assignedPad = pad;
                     this.onPad    = true;
+                    this.stationCommsTimer = 0;
                     this.iv       = { x: 0, y: 0 };
                     ship.throttle = 0;
                     this.game.state = 'LANDED';
@@ -253,6 +253,36 @@ class Docking {
         }
 
         if (input.justDown('KeyQ')) this.abort();
+    }
+
+    _blockOccupiedPads(st, ship) {
+        const PAD_HALF_W = 28;
+        const PAD_HALF_H = 22;
+
+        for (const pad of st.pads) {
+            if (!pad.occupied || pad.shipId === 'player') continue;
+
+            const dx = this.ip.x - pad.x;
+            const dy = this.ip.y - pad.y;
+            const inX = Math.abs(dx) < PAD_HALF_W;
+            const inY = Math.abs(dy) < PAD_HALF_H;
+            if (!inX || !inY) continue;
+
+            const penX = PAD_HALF_W - Math.abs(dx);
+            const penY = PAD_HALF_H - Math.abs(dy);
+
+            if (penX < penY) {
+                const pushDir = dx === 0 ? 1 : Math.sign(dx);
+                this.ip.x = pad.x + pushDir * PAD_HALF_W;
+                this.iv.x *= -0.35;
+            } else {
+                const pushDir = dy === 0 ? 1 : Math.sign(dy);
+                this.ip.y = pad.y + pushDir * PAD_HALF_H;
+                this.iv.y *= -0.35;
+            }
+
+            ship.takeDamage(Math.max(1.5, vecLen(this.iv.x, this.iv.y) * 0.05));
+        }
     }
 
     // ── Takeoff from pad → back to flying inside ──────────────────────────────

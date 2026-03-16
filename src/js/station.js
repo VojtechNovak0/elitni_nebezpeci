@@ -103,8 +103,27 @@ class Station {
         return diff < CONF.PORT_GAP / 2 + CONF.PORT_TOLERANCE;
     }
 
+    randomizePadOccupancy() {
+        // Random occupancy for station arrival, but always keep at least one pad free.
+        for (const pad of this.pads) {
+            const occupied = Math.random() < 0.5;
+            pad.occupied = occupied;
+            pad.shipId   = occupied ? `npc-${pad.id}` : null;
+        }
+
+        if (this.pads.every(p => p.occupied)) {
+            const idx = Math.floor(Math.random() * this.pads.length);
+            this.pads[idx].occupied = false;
+            this.pads[idx].shipId   = null;
+        }
+    }
+
+    getFreePads() {
+        return this.pads.filter(p => !p.occupied);
+    }
+
     assignPad(shipId) {
-        const pad = this.pads.find(p => !p.occupied);
+        const pad = this.getFreePads()[0];
         if (pad) { pad.occupied = true; pad.shipId = shipId; }
         return pad || null;
     }
