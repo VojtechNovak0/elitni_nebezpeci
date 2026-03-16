@@ -51,7 +51,7 @@ const CONF = {
 
     // ── Fuel ──────────────────────────────────────────────────────
     FUEL_CAP:       100,       // default max fuel
-    FUEL_BURN_RATE: 0.0020,    // fuel units per second at full throttle
+    FUEL_BURN_RATE: 0.20,      // fuel units per second at full throttle
 
     // ── Ship Upgrades ─────────────────────────────────────────────
     SHIP_UPGRADES: [

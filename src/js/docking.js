@@ -149,6 +149,8 @@ class Docking {
 
     updateInside(dt) {
         const { input, ship } = this.game;
+        const st = this.targetStation;
+        if (!st) return;
         if (this.msgTimer > 0) this.msgTimer -= dt;
         this._blinkTimer += dt;
 

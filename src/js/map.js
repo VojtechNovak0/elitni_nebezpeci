@@ -59,11 +59,14 @@ class GalaxyMap {
         ctx.fillText('── GALAXY MAP ──', W / 2, 30);
 
         // ── Layout ────────────────────────────────────────────────────────────
-        const LIST_W = 280;
-        const mapX   = 12;
-        const mapY   = 48;
-        const mapW   = W - LIST_W - 30;
-        const mapH   = H - 72;
+        const LIST_W     = 280;
+        const mapX       = 12;
+        const mapY       = 48;
+        const mapW       = W - LIST_W - 30;
+        const controlsY  = H - 8;
+        const legendY    = controlsY - 16;
+        const mapBottomY = legendY - 14;
+        const mapH       = mapBottomY - mapY;
 
         // Map frame
         ctx.strokeStyle = '#223355';
@@ -276,7 +279,6 @@ class GalaxyMap {
         }
 
         // ── Legend ────────────────────────────────────────────────────────────
-        const legY = mapY + mapH + 14;
         ctx.font = '10px "Courier New", monospace';
         ctx.textAlign = 'left';
         [
@@ -286,13 +288,13 @@ class GalaxyMap {
             ['#88ff99', '⊕ FUEL DEPOT'],
         ].forEach(([col, label], i) => {
             ctx.fillStyle = col;
-            ctx.fillText(label, mapX + i * 135, legY);
+            ctx.fillText(label, mapX + i * 135, legendY);
         });
 
         // ── Controls hint ─────────────────────────────────────────────────────
         ctx.fillStyle = '#334466';
         ctx.textAlign = 'center';
         ctx.font = '10px "Courier New", monospace';
-        ctx.fillText('[↑↓] BROWSE   [F / ENTER] SET WAYPOINT   [TAB] SET & CLOSE   [M / Q] CLOSE', W / 2, H - 8);
+        ctx.fillText('[↑↓] BROWSE   [F / ENTER] SET WAYPOINT   [TAB] SET & CLOSE   [M / Q] CLOSE', W / 2, controlsY);
     }
 }
