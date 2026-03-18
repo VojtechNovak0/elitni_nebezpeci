@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elitní Nebezpečí - 2D Vesmírná Hra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 50%, #0a0a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* Stars animation */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .stars::before, .stars::after {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 
+                100px 50px white, 200px 150px white, 300px 80px white,
+                400px 200px white, 500px 100px white, 600px 300px white,
+                700px 50px white, 800px 250px white, 150px 300px white,
+                250px 400px white, 350px 500px white, 450px 350px white,
+                550px 450px white, 650px 550px white, 750px 400px white,
+                50px 600px white, 850px 150px white, 900px 350px white,
+                1000px 200px white, 1100px 400px white, 1200px 100px white;
+            animation: twinkle 4s ease-in-out infinite;
+        }
+
+        .stars::after {
+            animation-delay: 2s;
+            box-shadow: 
+                80px 100px white, 180px 200px white, 280px 30px white,
+                380px 250px white, 480px 150px white, 580px 350px white,
+                680px 100px white, 780px 300px white, 130px 350px white,
+                230px 450px white, 330px 550px white, 430px 400px white;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+
+        h1 {
+            font-size: 4rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 50px rgba(0, 212, 255, 0.5);
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.7);
+        }
+
+        /* Main content */
+        main {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Section styling */
+        section {
+            margin-bottom: 80px;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        /* Hero image section */
+        .hero-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0, 212, 255, 0.3);
+            margin-bottom: 60px;
+        }
+
+        /* Features grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card h3 {
+            color: #ff6b35;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: #bbb;
+            line-height: 1.6;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 20px;
+        }
+
+        .gallery-item h4 {
+            color: #00d4ff;
+            font-size: 1.2rem;
+        }
+
+        /* Warning section (fuel) */
+        .warning-section {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(123, 44, 191, 0.1));
+            border: 2px solid #ff6b35;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .warning-section h3 {
+            color: #ff6b35;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .warning-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .fuel-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        footer p {
+            color: #666;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .lightbox-close:hover {
+            color: #00d4ff;
+        }
+
+        .gallery-item {
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <header>
+        <h1>🚀 Elitní Nebezpečí</h1>
+        <p class="tagline">Prozkoumej vesmír. Obchoduj. Přežij.</p>
+        <a href="https://elitni-nebezpeci.onrender.com/" class="cta-button">▶ Hrát nyní</a>
+    </header>
+
+    <main>
+        <img src="web_images/Space_1.png" alt="Vesmír" class="hero-image">
+
+        <section>
+            <h2>🌌 O hře</h2>
+            <p style="text-align: center; font-size: 1.3rem; max-width: 800px; margin: 0 auto; line-height: 1.8; color: #ccc;">
+                <strong>Elitní Nebezpečí</strong> je 2D vesmírná hra inspirovaná legendárním Elite Dangerous. 
+                Prozkoumávej nekonečný vesmír, hledej vesmírné stanice a využij jejich obchodní nabídky k maximalizaci zisku. 
+                Vylepšuj svou loď a staň se nejlepším obchodníkem v galaxii!
+            </p>
+        </section>
+
+        <section>
+            <h2>⭐ Hlavní funkce</h2>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Detailní mapa galaxie</h3>
+                    <p>Interaktivní mapa ti ukáže kam můžeš letět a kam potřebuješ dostat více paliva. Plánuj své cesty strategicky!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏪</div>
+                    <h3>Obchodování na stanicích</h3>
+                    <p>Každá stanice má jiné ceny. Nakupuj levně, prodávej draze a buduj své impérium kousek po kousku.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Upgrady lodě</h3>
+                    <p>Vylepši motory, nádrž na palivo, nákladový prostor a další systémy. Tvá loď roste s tebou!</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Průzkum vesmíru</h3>
+                    <p>Objevuj nové hvězdné systémy, hledej skryté stanice a mapuj neznámé oblasti galaxie.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>📸 Screenshoty</h2>
+            <div class="gallery">
+                <div class="gallery-item" onclick="openLightbox('web_images/map.png')">
+                    <img src="web_images/map.png" alt="Mapa galaxie">
+                    <div class="overlay">
+                        <h4>🗺️ Mapa galaxie</h4>
+                    </div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('web_images/docking.png')">
+                    <img src="web_images/docking.png" alt="Dokování">
+                    <div class="overlay">
+                        <h4>🛸 Dokování ke stanici</h4>
+                    </div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('web_images/in_station.png')">
+                    <img src="web_images/in_station.png" alt="Ve stanici">
+                    <div class="overlay">
+                        <h4>🏠 Uvnitř stanice</h4>
+                    </div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('web_images/shop.png')">
+                    <img src="web_images/shop.png" alt="Obchod">
+                    <div class="overlay">
+                        <h4>🛒 Obchod s vylepšeními</h4>
+                    </div>
+                </div>
+                <div class="gallery-item" onclick="openLightbox('web_images/space_2.png')">
+                    <img src="web_images/space_2.png" alt="Let vesmírem">
+                    <div class="overlay">
+                        <h4>✨ Let hlubokým vesmírem</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="warning-section">
+                <div class="fuel-icon">⛽</div>
+                <h3>⚠️ Pozor na palivo!</h3>
+                <p>
+                    Jedna z nejdůležitějších mechanik hry - <strong>tvé palivo je omezené</strong>!<br><br>
+                    Vždy si hlídej stav nádrže před delší cestou. Dojde-li ti palivo uprostřed prázdného vesmíru, 
+                    tvá mise končí. Plánuj trasy přes stanice, kde můžeš doplnit zásoby, 
+                    nebo investuj do větší palivové nádrže. Galaxie neodpouští nepřipraveným!
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Elitní Nebezpečí | Vytvořeno s ❤️ pro vesmírné dobrodruhy</p>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="Screenshot" id="lightbox-img">
+    </div>
+
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
