@@ -19,6 +19,8 @@ class SaveGame {
         const { ship, universe, trading, docking } = game;
         
         return {
+            // Game state
+            gameState: game.state,
             // Ship state
             ship: {
                 x: ship.x,
@@ -43,6 +45,8 @@ class SaveGame {
                 _nameIdx: universe._nameIdx,
                 _rngSeed: universe._rng.s,
                 selectedWaypointIdx: universe.selectedWaypointIdx,
+                targetStationIdx: docking.targetStation ? universe.stations.indexOf(docking.targetStation) : -1,
+                assignedPadId: docking.assignedPad?.id || null,
                 stations: universe.stations.map(st => ({
                     x: st.x,
                     y: st.y,
@@ -78,6 +82,11 @@ class SaveGame {
         if (!data) return false;
 
         const { ship, universe, trading } = game;
+
+        // Restore game state
+        if (data.gameState) {
+            game.state = data.gameState;
+        }
 
         // Restore ship
         if (data.ship) {
@@ -138,6 +147,15 @@ class SaveGame {
                 a.vy = aData.vy;
                 a.angle = aData.angle;
                 universe.aiShips.push(a);
+            }
+
+            // Restore docking state
+            const docking = game.docking;
+            if (u.targetStationIdx >= 0 && universe.stations[u.targetStationIdx]) {
+                docking.targetStation = universe.stations[u.targetStationIdx];
+                if (u.assignedPadId && docking.targetStation.pads) {
+                    docking.assignedPad = docking.targetStation.pads.find(p => p.id === u.assignedPadId) || null;
+                }
             }
         }
 
