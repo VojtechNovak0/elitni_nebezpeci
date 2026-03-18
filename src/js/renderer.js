@@ -81,8 +81,20 @@ class Renderer {
     renderSpace(ctx) {
         const { ship, universe, camera } = this.game;
         const W = CONF.W, H = CONF.H;
+        const MAX_VISIBLE_STATIONS = 15;
 
         this.starField.render(ctx, camera.x, camera.y);
+
+        // Get 15 closest stations to the player
+        let closestStations = [...universe.stations]
+            .sort((a, b) => dist(ship.x, ship.y, a.x, a.y) - dist(ship.x, ship.y, b.x, b.y))
+            .slice(0, MAX_VISIBLE_STATIONS);
+
+        // Always include selected waypoint even if not in top 15
+        const selectedWp = universe.selectedWaypoint;
+        if (selectedWp && !closestStations.includes(selectedWp)) {
+            closestStations = [...closestStations.slice(0, 14), selectedWp];
+        }
 
         // World-space pass: stations and AI ships
         ctx.save();
@@ -90,7 +102,7 @@ class Renderer {
         ctx.scale(camera.zoom, camera.zoom);
         ctx.translate(-camera.x, -camera.y);
 
-        for (const st of universe.stations)
+        for (const st of closestStations)
             this._drawStationBody(ctx, st, st === universe.selectedWaypoint);
 
         ctx.restore();
@@ -100,7 +112,7 @@ class Renderer {
             this._drawAIShipFixed(ctx, ai);
 
         // Screen-space labels
-        for (const st of universe.stations)
+        for (const st of closestStations)
             this._drawStationLabel(ctx, st, st === universe.selectedWaypoint);
 
         // Player ship always at screen centre (camera follows ship with lag)
@@ -469,40 +481,42 @@ class Renderer {
         const blink = Math.sin(docking._blinkTimer * 4) > 0;
 
         // Landing pads – highlight free pads, dim occupied ones
-        for (const pad of st.pads) {
-            const px    = cx + pad.x;
-            const py    = cy + pad.y;
-            const isSel  = docking.assignedPad?.id === pad.id;
-            const isFree = !pad.occupied || pad.shipId === 'player';
+        if (st.pads && Array.isArray(st.pads)) {
+            for (const pad of st.pads) {
+                const px    = cx + pad.x;
+                const py    = cy + pad.y;
+                const isSel  = docking.assignedPad?.id === pad.id;
+                const isFree = !pad.occupied || pad.shipId === 'player';
 
-            ctx.fillStyle   = isSel ? (blink ? '#cce' : '#dde')
-                            : isFree ? '#e8f0e8' : '#ddd';
-            ctx.strokeStyle = isSel ? '#00c' : isFree ? '#484' : '#999';
-            ctx.lineWidth   = isSel ? 2.5 : isFree ? 1.5 : 1;
-            ctx.fillRect(px - 28, py - 22, 56, 44);
-            ctx.strokeRect(px - 28, py - 22, 56, 44);
+                ctx.fillStyle   = isSel ? (blink ? '#cce' : '#dde')
+                                : isFree ? '#e8f0e8' : '#ddd';
+                ctx.strokeStyle = isSel ? '#00c' : isFree ? '#484' : '#999';
+                ctx.lineWidth   = isSel ? 2.5 : isFree ? 1.5 : 1;
+                ctx.fillRect(px - 28, py - 22, 56, 44);
+                ctx.strokeRect(px - 28, py - 22, 56, 44);
 
-            // Pad number
-            ctx.fillStyle = '#000';
-            ctx.font = isSel ? 'bold 18px "Courier New"' : '15px "Courier New"';
-            ctx.textAlign = 'center';
-            ctx.fillText(pad.id, px, py + 7);
+                // Pad number
+                ctx.fillStyle = '#000';
+                ctx.font = isSel ? 'bold 18px "Courier New"' : '15px "Courier New"';
+                ctx.textAlign = 'center';
+                ctx.fillText(pad.id, px, py + 7);
 
-            // Small AI ship silhouette when pad occupied
-            if (pad.occupied && pad.shipId !== 'player') {
-                ctx.fillStyle = '#555';
-                ctx.save();
-                ctx.translate(px, py - 10);
-                ctx.rotate(-Math.PI / 2);
-                const s = 6;
-                ctx.beginPath();
-                ctx.moveTo(s * 1.4, 0);
-                ctx.lineTo(-s, -s * 0.7);
-                ctx.lineTo(-s * 0.5, 0);
-                ctx.lineTo(-s,  s * 0.7);
-                ctx.closePath();
-                ctx.fill();
-                ctx.restore();
+                // Small AI ship silhouette when pad occupied
+                if (pad.occupied && pad.shipId !== 'player') {
+                    ctx.fillStyle = '#555';
+                    ctx.save();
+                    ctx.translate(px, py - 10);
+                    ctx.rotate(-Math.PI / 2);
+                    const s = 6;
+                    ctx.beginPath();
+                    ctx.moveTo(s * 1.4, 0);
+                    ctx.lineTo(-s, -s * 0.7);
+                    ctx.lineTo(-s * 0.5, 0);
+                    ctx.lineTo(-s,  s * 0.7);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                }
             }
         }
 

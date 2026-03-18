@@ -314,12 +314,24 @@ class HUD {
     }
 
     _offScreenMarkers(ctx) {
-        const { universe } = this.game;
+        const { universe, ship } = this.game;
         const W = CONF.W, H = CONF.H;
         const cam = this.game.camera;
         const MARGIN = 22;
+        const MAX_VISIBLE_STATIONS = 15;
 
-        for (const st of universe.stations) {
+        // Get 15 closest stations to the player
+        let closestStations = [...universe.stations]
+            .sort((a, b) => dist(ship.x, ship.y, a.x, a.y) - dist(ship.x, ship.y, b.x, b.y))
+            .slice(0, MAX_VISIBLE_STATIONS);
+
+        // Always include selected waypoint even if not in top 15
+        const selectedWp = universe.selectedWaypoint;
+        if (selectedWp && !closestStations.includes(selectedWp)) {
+            closestStations = [...closestStations.slice(0, 14), selectedWp];
+        }
+
+        for (const st of closestStations) {
             const sx = (st.x - cam.x) * cam.zoom + W / 2;
             const sy = (st.y - cam.y) * cam.zoom + H / 2;
             if (sx > -10 && sx < W + 10 && sy > -10 && sy < H + 10) continue;

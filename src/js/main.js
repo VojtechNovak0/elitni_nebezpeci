@@ -26,10 +26,11 @@ class Game {
         // Expose for browser console debugging
         window.game = this;
 
-        // Auto-save periodically (every 5 seconds)
+        // Auto-save periodically (every 2 seconds)
         this._autoSaveTimer = 0;
-        this._autoSaveInterval = 5;
+        this._autoSaveInterval = 2;
         this._savedDataLoaded = false;
+        this._isSaving = false;  // Prevent concurrent saves
     }
 
     async _initializeSaveData() {
@@ -57,8 +58,13 @@ class Game {
 
     _update(dt) {
         this._autoSaveTimer += dt;
-        if (this._autoSaveTimer >= this._autoSaveInterval) {
-            SaveGame.save(this); // Fire and forget (async)
+        if (this._autoSaveTimer >= this._autoSaveInterval && !this._isSaving) {
+            this._isSaving = true;
+            SaveGame.save(this).then(() => {
+                this._isSaving = false;
+            }).catch(() => {
+                this._isSaving = false;
+            });
             this._autoSaveTimer = 0;
         }
 
