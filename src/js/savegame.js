@@ -132,10 +132,17 @@ class SaveGame {
                 st.inventory = { ...stData.inventory };
                 st.prices = { ...stData.prices };
                 st.fuelPrice = stData.fuelPrice;
-                st.availableUpgrades = [...stData.availableUpgrades];
-                st.pads = stData.pads.map(p => ({
-                    ...p,
-                }));
+                st.availableUpgrades = [...(stData.availableUpgrades || [])];
+                // Only restore pads if they exist in savedata, otherwise keep original from constructor
+                if (stData.pads && Array.isArray(stData.pads) && stData.pads.length > 0) {
+                    st.pads = stData.pads.map(p => ({
+                        id: p.id,
+                        x: p.x,
+                        y: p.y,
+                        occupied: p.occupied,
+                        shipId: p.shipId,
+                    }));
+                }
                 universe.stations.push(st);
             }
 
