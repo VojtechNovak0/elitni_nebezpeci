@@ -56,6 +56,8 @@ class SaveGame {
                     availableUpgrades: [...st.availableUpgrades],
                     pads: st.pads.map(p => ({
                         id: p.id,
+                        x: p.x,
+                        y: p.y,
                         occupied: p.occupied,
                         shipId: p.shipId,
                     })),
