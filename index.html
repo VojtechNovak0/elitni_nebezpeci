@@ -61,12 +61,51 @@
             50% { opacity: 1; }
         }
 
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 15px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #aaa;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        nav a:hover, nav a.active {
+            color: white;
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        nav a.active {
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+        }
+
         /* Header */
         header {
             position: relative;
             z-index: 1;
             text-align: center;
-            padding: 60px 20px;
+            padding: 120px 20px 60px;
             background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
         }
 
@@ -102,11 +141,17 @@
             border-radius: 50px;
             transition: all 0.3s ease;
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+            margin: 5px;
         }
 
         .cta-button:hover {
             transform: scale(1.05);
             box-shadow: 0 0 50px rgba(0, 212, 255, 0.7);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid #00d4ff;
         }
 
         /* Main content */
@@ -116,6 +161,21 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Section styling */
@@ -129,6 +189,12 @@
             text-align: center;
             margin-bottom: 40px;
             text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        h3 {
+            color: #ff6b35;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
         }
 
         /* Hero image section */
@@ -190,6 +256,7 @@
             overflow: hidden;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
         }
 
         .gallery-item img {
@@ -240,6 +307,79 @@
         .fuel-icon {
             font-size: 4rem;
             margin-bottom: 20px;
+        }
+
+        /* Content box */
+        .content-box {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        .content-box p {
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .content-box ul {
+            color: #ccc;
+            line-height: 2;
+            margin-left: 20px;
+        }
+
+        .content-box img {
+            width: 100%;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Support page */
+        .support-links {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .support-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px 40px;
+            text-decoration: none;
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .support-link:hover {
+            border-color: #00d4ff;
+            transform: translateX(10px);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .support-link span {
+            font-size: 2.5rem;
+        }
+
+        .support-link div h4 {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .support-link div p {
+            color: #888;
+            font-size: 0.9rem;
         }
 
         /* Footer */
@@ -296,10 +436,6 @@
             color: #00d4ff;
         }
 
-        .gallery-item {
-            cursor: pointer;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
@@ -317,104 +453,243 @@
             .gallery {
                 grid-template-columns: 1fr;
             }
+
+            nav ul {
+                gap: 5px;
+            }
+
+            nav a {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="stars"></div>
 
+    <nav>
+        <ul>
+            <li><a href="#" class="active" onclick="showPage('home')">🏠 Domů</a></li>
+            <li><a href="#" onclick="showPage('features')">⭐ Funkce</a></li>
+            <li><a href="#" onclick="showPage('screenshots')">📸 Screenshoty</a></li>
+            <li><a href="#" onclick="showPage('guide')">📖 Průvodce</a></li>
+            <li><a href="#" onclick="showPage('support')">💬 Podpora</a></li>
+        </ul>
+    </nav>
+
     <header>
         <h1>🚀 Elitní Nebezpečí</h1>
         <p class="tagline">Prozkoumej vesmír. Obchoduj. Přežij.</p>
         <a href="https://elitni-nebezpeci.onrender.com/" class="cta-button">▶ Hrát nyní</a>
+        <a href="https://github.com/VojtechNovak0/elitni_nebezpeci/issues" class="cta-button secondary">🐛 Nahlásit problém</a>
     </header>
 
     <main>
-        <img src="web_images/Space_1.png" alt="Vesmír" class="hero-image">
+        <!-- HOME PAGE -->
+        <div class="page active" id="page-home">
+            <img src="web_images/Space_1.png" alt="Vesmír" class="hero-image">
 
-        <section>
-            <h2>🌌 O hře</h2>
-            <p style="text-align: center; font-size: 1.3rem; max-width: 800px; margin: 0 auto; line-height: 1.8; color: #ccc;">
-                <strong>Elitní Nebezpečí</strong> je 2D vesmírná hra inspirovaná legendárním Elite Dangerous. 
-                Prozkoumávej nekonečný vesmír, hledej vesmírné stanice a využij jejich obchodní nabídky k maximalizaci zisku. 
-                Vylepšuj svou loď a staň se nejlepším obchodníkem v galaxii!
-            </p>
-        </section>
-
-        <section>
-            <h2>⭐ Hlavní funkce</h2>
-            <div class="features">
-                <div class="feature-card">
-                    <div class="feature-icon">🗺️</div>
-                    <h3>Detailní mapa galaxie</h3>
-                    <p>Interaktivní mapa ti ukáže kam můžeš letět a kam potřebuješ dostat více paliva. Plánuj své cesty strategicky!</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏪</div>
-                    <h3>Obchodování na stanicích</h3>
-                    <p>Každá stanice má jiné ceny. Nakupuj levně, prodávej draze a buduj své impérium kousek po kousku.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔧</div>
-                    <h3>Upgrady lodě</h3>
-                    <p>Vylepši motory, nádrž na palivo, nákladový prostor a další systémy. Tvá loď roste s tebou!</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔍</div>
-                    <h3>Průzkum vesmíru</h3>
-                    <p>Objevuj nové hvězdné systémy, hledej skryté stanice a mapuj neznámé oblasti galaxie.</p>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <h2>📸 Screenshoty</h2>
-            <div class="gallery">
-                <div class="gallery-item" onclick="openLightbox('web_images/map.png')">
-                    <img src="web_images/map.png" alt="Mapa galaxie">
-                    <div class="overlay">
-                        <h4>🗺️ Mapa galaxie</h4>
-                    </div>
-                </div>
-                <div class="gallery-item" onclick="openLightbox('web_images/docking.png')">
-                    <img src="web_images/docking.png" alt="Dokování">
-                    <div class="overlay">
-                        <h4>🛸 Dokování ke stanici</h4>
-                    </div>
-                </div>
-                <div class="gallery-item" onclick="openLightbox('web_images/in_station.png')">
-                    <img src="web_images/in_station.png" alt="Ve stanici">
-                    <div class="overlay">
-                        <h4>🏠 Uvnitř stanice</h4>
-                    </div>
-                </div>
-                <div class="gallery-item" onclick="openLightbox('web_images/shop.png')">
-                    <img src="web_images/shop.png" alt="Obchod">
-                    <div class="overlay">
-                        <h4>🛒 Obchod s vylepšeními</h4>
-                    </div>
-                </div>
-                <div class="gallery-item" onclick="openLightbox('web_images/space_2.png')">
-                    <img src="web_images/space_2.png" alt="Let vesmírem">
-                    <div class="overlay">
-                        <h4>✨ Let hlubokým vesmírem</h4>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section>
-            <div class="warning-section">
-                <div class="fuel-icon">⛽</div>
-                <h3>⚠️ Pozor na palivo!</h3>
-                <p>
-                    Jedna z nejdůležitějších mechanik hry - <strong>tvé palivo je omezené</strong>!<br><br>
-                    Vždy si hlídej stav nádrže před delší cestou. Dojde-li ti palivo uprostřed prázdného vesmíru, 
-                    tvá mise končí. Plánuj trasy přes stanice, kde můžeš doplnit zásoby, 
-                    nebo investuj do větší palivové nádrže. Galaxie neodpouští nepřipraveným!
+            <section>
+                <h2>🌌 O hře</h2>
+                <p style="text-align: center; font-size: 1.3rem; max-width: 800px; margin: 0 auto; line-height: 1.8; color: #ccc;">
+                    <strong>Elitní Nebezpečí</strong> je 2D vesmírná hra inspirovaná legendárním Elite Dangerous. 
+                    Prozkoumávej nekonečný vesmír, hledej vesmírné stanice a využij jejich obchodní nabídky k maximalizaci zisku. 
+                    Vylepšuj svou loď a staň se nejlepším obchodníkem v galaxii!
                 </p>
-            </div>
-        </section>
+            </section>
+
+            <section>
+                <h2>⭐ Hlavní funkce</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🗺️</div>
+                        <h3>Detailní mapa galaxie</h3>
+                        <p>Interaktivní mapa ti ukáže kam můžeš letět a kam potřebuješ dostat více paliva. Plánuj své cesty strategicky!</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏪</div>
+                        <h3>Obchodování na stanicích</h3>
+                        <p>Každá stanice má jiné ceny. Nakupuj levně, prodávej draze a buduj své impérium kousek po kousku.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h3>Upgrady lodě</h3>
+                        <p>Vylepši motory, nádrž na palivo a nákladový prostor. Tvá loď roste s tebou!</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Průzkum vesmíru</h3>
+                        <p>Objevuj nové lokace, hledej stanice a mapuj neznámé oblasti vesmíru.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- FEATURES PAGE -->
+        <div class="page" id="page-features">
+            <section>
+                <h2>⭐ Herní mechaniky</h2>
+                
+                <div class="content-box">
+                    <h3>🗺️ Mapa a navigace</h3>
+                    <p>Detailní mapa galaxie je tvým nejdůležitějším nástrojem. Ukazuje ti:</p>
+                    <ul>
+                        <li>Všechny dostupné stanice v dosahu</li>
+                        <li>Kam můžeš doletět s aktuálním množstvím paliva</li>
+                        <li>Kam potřebuješ více paliva pro cestu</li>
+                    </ul>
+                    <img src="web_images/map.png" alt="Mapa" onclick="openLightbox('web_images/map.png')">
+                </div>
+
+                <div class="content-box">
+                    <h3>🏪 Obchodování</h3>
+                    <p>Každá stanice nabízí různé zboží za různé ceny. Klíčem k úspěchu je:</p>
+                    <ul>
+                        <li>Nakupovat zboží tam, kde je levné</li>
+                        <li>Prodávat tam, kde je drahé</li>
+                        <li>Sledovat nabídku a poptávku na různých stanicích</li>
+                    </ul>
+                    <img src="web_images/in_station.png" alt="Stanice" onclick="openLightbox('web_images/in_station.png')">
+                </div>
+
+                <div class="content-box">
+                    <h3>🔧 Upgrady lodě</h3>
+                    <p>V obchodě můžeš vylepšit svou loď. K dispozici máš:</p>
+                    <ul>
+                        <li><strong>Motory</strong> - rychlejší cestování vesmírem</li>
+                        <li><strong>Nádrž na palivo</strong> - delší dosah bez tankování</li>
+                        <li><strong>Nákladový prostor</strong> - více zboží na obchodování</li>
+                    </ul>
+                    <img src="web_images/shop.png" alt="Obchod" onclick="openLightbox('web_images/shop.png')">
+                </div>
+
+                <div class="warning-section">
+                    <div class="fuel-icon">⛽</div>
+                    <h3>⚠️ Pozor na palivo!</h3>
+                    <p>
+                        Jedna z nejdůležitějších mechanik hry - <strong>tvé palivo je omezené</strong>!<br><br>
+                        Vždy si hlídej stav nádrže před delší cestou. Dojde-li ti palivo uprostřed prázdného vesmíru, 
+                        tvá mise končí. Plánuj trasy přes stanice, kde můžeš doplnit zásoby, 
+                        nebo investuj do větší palivové nádrže. Galaxie neodpouští nepřipraveným!
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- SCREENSHOTS PAGE -->
+        <div class="page" id="page-screenshots">
+            <section>
+                <h2>📸 Screenshoty</h2>
+                <div class="gallery">
+                    <div class="gallery-item" onclick="openLightbox('web_images/map.png')">
+                        <img src="web_images/map.png" alt="Mapa galaxie">
+                        <div class="overlay">
+                            <h4>🗺️ Mapa galaxie</h4>
+                        </div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('web_images/docking.png')">
+                        <img src="web_images/docking.png" alt="Dokování">
+                        <div class="overlay">
+                            <h4>🛸 Dokování ke stanici</h4>
+                        </div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('web_images/in_station.png')">
+                        <img src="web_images/in_station.png" alt="Ve stanici">
+                        <div class="overlay">
+                            <h4>🏠 Uvnitř stanice</h4>
+                        </div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('web_images/shop.png')">
+                        <img src="web_images/shop.png" alt="Obchod">
+                        <div class="overlay">
+                            <h4>🛒 Obchod s vylepšeními</h4>
+                        </div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('web_images/space_2.png')">
+                        <img src="web_images/space_2.png" alt="Let vesmírem">
+                        <div class="overlay">
+                            <h4>✨ Let hlubokým vesmírem</h4>
+                        </div>
+                    </div>
+                    <div class="gallery-item" onclick="openLightbox('web_images/Space_1.png')">
+                        <img src="web_images/Space_1.png" alt="Vesmír">
+                        <div class="overlay">
+                            <h4>🌌 Nekonečný vesmír</h4>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- GUIDE PAGE -->
+        <div class="page" id="page-guide">
+            <section>
+                <h2>📖 Průvodce hrou</h2>
+                
+                <div class="content-box">
+                    <h3>🚀 Začínáme</h3>
+                    <p>Když začneš hrát, máš základní loď s omezeným palivem a malým nákladovým prostorem. Tvým cílem je vydělat peníze obchodováním a postupně vylepšovat svou loď.</p>
+                </div>
+
+                <div class="content-box">
+                    <h3>🎯 Základní strategie</h3>
+                    <ul>
+                        <li><strong>1.</strong> Podívej se na mapu a najdi nejbližší stanice</li>
+                        <li><strong>2.</strong> Zkontroluj ceny zboží na aktuální stanici</li>
+                        <li><strong>3.</strong> Nakup zboží, které můžeš prodat jinde s ziskem</li>
+                        <li><strong>4.</strong> Leť na cílovou stanici a prodej</li>
+                        <li><strong>5.</strong> Opakuj a postupně vylepšuj loď</li>
+                    </ul>
+                </div>
+
+                <div class="content-box">
+                    <h3>💡 Tipy pro přežití</h3>
+                    <ul>
+                        <li>Vždy měj dost paliva na cestu zpět k nejbližší stanici</li>
+                        <li>Větší nádrž = větší svoboda pohybu</li>
+                        <li>Lepší motory = rychlejší cesty = více obchodů za čas</li>
+                        <li>Větší nákladový prostor = více zisku z jedné cesty</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- SUPPORT PAGE -->
+        <div class="page" id="page-support">
+            <section>
+                <h2>💬 Podpora</h2>
+                
+                <div class="content-box" style="text-align: center;">
+                    <p>Máš problém s hrou? Našel jsi chybu? Máš nápad na vylepšení?</p>
+                    <p>Kontaktuj nás přes GitHub Issues!</p>
+                </div>
+
+                <div class="support-links">
+                    <a href="https://github.com/VojtechNovak0/elitni_nebezpeci/issues" class="support-link" target="_blank">
+                        <span>🐛</span>
+                        <div>
+                            <h4>Nahlásit problém</h4>
+                            <p>Našel jsi bug? Dej nám vědět na GitHubu</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/VojtechNovak0/elitni_nebezpeci/issues" class="support-link" target="_blank">
+                        <span>💡</span>
+                        <div>
+                            <h4>Návrh na vylepšení</h4>
+                            <p>Máš nápad jak hru zlepšit?</p>
+                        </div>
+                    </a>
+                    <a href="https://github.com/VojtechNovak0/elitni_nebezpeci" class="support-link" target="_blank">
+                        <span>📂</span>
+                        <div>
+                            <h4>GitHub repozitář</h4>
+                            <p>Podívej se na zdrojový kód</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </div>
     </main>
 
     <footer>
@@ -428,6 +703,25 @@
     </div>
 
     <script>
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById('page-' + pageName).classList.add('active');
+            
+            // Update nav
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function openLightbox(src) {
             document.getElementById('lightbox-img').src = src;
             document.getElementById('lightbox').classList.add('active');
