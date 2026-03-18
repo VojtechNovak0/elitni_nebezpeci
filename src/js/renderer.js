@@ -81,8 +81,20 @@ class Renderer {
     renderSpace(ctx) {
         const { ship, universe, camera } = this.game;
         const W = CONF.W, H = CONF.H;
+        const MAX_VISIBLE_STATIONS = 15;
 
         this.starField.render(ctx, camera.x, camera.y);
+
+        // Get 15 closest stations to the player
+        let closestStations = [...universe.stations]
+            .sort((a, b) => dist(ship.x, ship.y, a.x, a.y) - dist(ship.x, ship.y, b.x, b.y))
+            .slice(0, MAX_VISIBLE_STATIONS);
+
+        // Always include selected waypoint even if not in top 15
+        const selectedWp = universe.selectedWaypoint;
+        if (selectedWp && !closestStations.includes(selectedWp)) {
+            closestStations = [...closestStations.slice(0, 14), selectedWp];
+        }
 
         // World-space pass: stations and AI ships
         ctx.save();
@@ -90,7 +102,7 @@ class Renderer {
         ctx.scale(camera.zoom, camera.zoom);
         ctx.translate(-camera.x, -camera.y);
 
-        for (const st of universe.stations)
+        for (const st of closestStations)
             this._drawStationBody(ctx, st, st === universe.selectedWaypoint);
 
         ctx.restore();
@@ -100,7 +112,7 @@ class Renderer {
             this._drawAIShipFixed(ctx, ai);
 
         // Screen-space labels
-        for (const st of universe.stations)
+        for (const st of closestStations)
             this._drawStationLabel(ctx, st, st === universe.selectedWaypoint);
 
         // Player ship always at screen centre (camera follows ship with lag)
