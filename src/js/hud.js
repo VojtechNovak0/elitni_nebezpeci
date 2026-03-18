@@ -193,7 +193,7 @@ class HUD {
 
         // Semi-circle gauge in bottom-right corner, opening faces down
         const cx = W - 90;
-        const cy = H - 38;
+        const cy = H - 80;
         const r  = 58;
 
         // Logarithmic speed ratio (0–1)

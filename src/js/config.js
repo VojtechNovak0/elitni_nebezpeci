@@ -57,7 +57,7 @@ const CONF = {
     // ── Ship Upgrades ─────────────────────────────────────────────
     SHIP_UPGRADES: [
         { id: 'engine2',  name: 'Engine Mk.II',      cost:  8000, desc: '+30% thrust & top speed',  requires: null,      types: ['TRADE','MILITARY','INDUSTRIAL'] },
-        { id: 'engine3',  name: 'Engine Mk.III',     cost: 22000, desc: '+60% thrust & top speed',  requires: 'engine2', types: ['MILITARY','INDUSTRIAL'] },
+        { id: 'engine3',  name: 'Engine Mk.III',     cost: 16000, desc: '+60% thrust & top speed',  requires: 'engine2', types: ['MILITARY','INDUSTRIAL'] },
         { id: 'shields2', name: 'Shield Booster',    cost:  5000, desc: 'Max shields +50',           requires: null,      types: ['TRADE','MILITARY'] },
         { id: 'hull2',    name: 'Hull Plating',      cost:  4000, desc: 'Max hull +50',              requires: null,      types: ['TRADE','INDUSTRIAL'] },
         { id: 'fuel2',    name: 'Ext. Fuel Tank',    cost:  7000, desc: 'Fuel capacity ×2',          requires: null,      types: ['TRADE','INDUSTRIAL','FUEL_DEPOT'] },

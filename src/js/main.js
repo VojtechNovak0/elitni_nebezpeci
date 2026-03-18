@@ -14,7 +14,7 @@ class Game {
         this.input    = new Input();
         this.camera   = new Camera();
         this.ship     = new PlayerShip(0, 0);
-        this.universe = new Universe();
+        this.universe = new Universe(true);  // skip initial generation, will load from save
         this.docking  = new Docking(this);
         this.trading  = new Trading(this);
         this.hud      = new HUD(this);
@@ -25,6 +25,20 @@ class Game {
 
         // Expose for browser console debugging
         window.game = this;
+
+        // Try to load saved game
+        const savedData = SaveGame.load();
+        if (savedData) {
+            SaveGame.deserialize(this, savedData);
+            console.log('[Game] Uložený stav načten');
+        } else {
+            // No save found, generate new universe
+            this.universe._generateInitial();
+        }
+
+        // Auto-save periodically (every 5 seconds)
+        this._autoSaveTimer = 0;
+        this._autoSaveInterval = 5;
     }
 
     // ── Main loop ─────────────────────────────────────────────────────────────
@@ -38,6 +52,12 @@ class Game {
     }
 
     _update(dt) {
+        this._autoSaveTimer += dt;
+        if (this._autoSaveTimer >= this._autoSaveInterval) {
+            SaveGame.save(this);
+            this._autoSaveTimer = 0;
+        }
+
         switch (this.state) {
             case 'SPACE':        this._updateSpace(dt);               break;
             case 'APPROACH':     this.docking.updateApproach(dt);    break;

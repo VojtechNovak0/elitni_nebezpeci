@@ -33,6 +33,7 @@ class Trading {
             st.inventory[good] -= amount;
             this.credits       -= price * amount;
             ship.fuel           = Math.min(ship.maxFuel, ship.fuel + amount * 5);
+            SaveGame.save(this.game);
             return;
         }
 
@@ -42,6 +43,7 @@ class Trading {
         st.inventory[good]  -= amount;
         this.credits        -= price * amount;
         this.cargo[good]     = (this.cargo[good] || 0) + amount;
+        SaveGame.save(this.game);
     }
 
     sell(good, amount = 1) {
@@ -54,6 +56,7 @@ class Trading {
         this.credits        += st.prices[good] * amount;
         this.cargo[good]    -= amount;
         if (!this.cargo[good]) delete this.cargo[good];
+        SaveGame.save(this.game);
     }
 
     // ── Upgrades: buy ship upgrades ────────────────────────────────────────────
@@ -69,6 +72,7 @@ class Trading {
         if (this.credits < def.cost) return 'NO_CR';
         this.credits -= def.cost;
         ship.installUpgrade(upgradeId);
+        SaveGame.save(this.game);
         return 'OK';
     }
 
@@ -84,6 +88,7 @@ class Trading {
         if (unitsOk <= 0) return;
         this.credits -= unitsOk * st.fuelPrice;
         ship.fuel    += unitsOk;
+        SaveGame.save(this.game);
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
@@ -103,17 +108,17 @@ class Trading {
         if (this._tab === 'MARKET') {
             if (inp.justDown('ArrowUp')   || inp.justDown('KeyW'))
                 this._row = (this._row - 1 + GOODS.length) % GOODS.length;
-            if (inp.justDown('ArrowDown') || inp.justDown('KeyS'))
+            if (inp.justDown('ArrowDown'))
                 this._row = (this._row + 1) % GOODS.length;
             if (inp.justDown('KeyB')) this.buy(GOODS[this._row]);
-            if (inp.justDown('KeyV')) this.sell(GOODS[this._row]);
+            if (inp.justDown('KeyS')) this.sell(GOODS[this._row]);
             // R = refuel 10 units at a time
             if (inp.justDown('KeyR')) this.refuel(10);
         } else {
             const maxRow = Math.max(0, upgs.length - 1);
             if (inp.justDown('ArrowUp')   || inp.justDown('KeyW'))
                 this._uRow = Math.max(0, this._uRow - 1);
-            if (inp.justDown('ArrowDown') || inp.justDown('KeyS'))
+            if (inp.justDown('ArrowDown'))
                 this._uRow = Math.min(maxRow, this._uRow + 1);
             if (inp.justDown('KeyB') && upgs.length > 0)
                 this.buyUpgrade(upgs[this._uRow].id);
@@ -198,7 +203,7 @@ class Trading {
         ctx.fillStyle = '#555';
         ctx.font = '11px "Courier New", monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('[↑↓] SELECT   [B] BUY 1   [V] SELL 1   [R] REFUEL +10   [TAB] UPGRADES   [Q] CLOSE', W / 2, startY + 2);
+        ctx.fillText('[↑↓] SELECT   [B] BUY 1   [S] SELL 1   [R] REFUEL +10   [TAB] UPGRADES   [Q] CLOSE', W / 2, startY + 2);
 
         // Fuel refuel info
         if (st) {

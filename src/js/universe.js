@@ -11,7 +11,7 @@ const STATION_NAMES = [
 ];
 
 class Universe {
-    constructor() {
+    constructor(skipGeneration = false) {
         this.stations  = [];
         this.aiShips   = [];
         this._nameIdx  = 0;
@@ -19,7 +19,9 @@ class Universe {
         this.generatedRadius     = CONF.STATION_SPREAD;
         this.selectedWaypointIdx = 0;
 
-        this._generateInitial();
+        if (!skipGeneration) {
+            this._generateInitial();
+        }
     }
 
     _generateInitial() {
