@@ -26,8 +26,15 @@ class Game {
         // Expose for browser console debugging
         window.game = this;
 
+        // Auto-save periodically (every 5 seconds)
+        this._autoSaveTimer = 0;
+        this._autoSaveInterval = 5;
+        this._savedDataLoaded = false;
+    }
+
+    async _initializeSaveData() {
         // Try to load saved game
-        const savedData = SaveGame.load();
+        const savedData = await SaveGame.load();
         if (savedData) {
             SaveGame.deserialize(this, savedData);
             console.log('[Game] Uložený stav načten');
@@ -35,10 +42,7 @@ class Game {
             // No save found, generate new universe
             this.universe._generateInitial();
         }
-
-        // Auto-save periodically (every 5 seconds)
-        this._autoSaveTimer = 0;
-        this._autoSaveInterval = 5;
+        this._savedDataLoaded = true;
     }
 
     // ── Main loop ─────────────────────────────────────────────────────────────
@@ -54,7 +58,7 @@ class Game {
     _update(dt) {
         this._autoSaveTimer += dt;
         if (this._autoSaveTimer >= this._autoSaveInterval) {
-            SaveGame.save(this);
+            SaveGame.save(this); // Fire and forget (async)
             this._autoSaveTimer = 0;
         }
 
@@ -163,9 +167,13 @@ class Game {
 
     start() {
         document.getElementById('gameCanvas').style.display = 'block';
-        requestAnimationFrame(ts => {
-            this._lastTime = ts;
-            this._loop(ts);
+        
+        // Initialize save data before starting game loop
+        this._initializeSaveData().then(() => {
+            requestAnimationFrame(ts => {
+                this._lastTime = ts;
+                this._loop(ts);
+            });
         });
     }
 }

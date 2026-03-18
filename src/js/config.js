@@ -15,12 +15,12 @@ const CONF = {
     ZOOM_SPEED_SCALE: 12000,  // speed at which zoom halves
 
     // ── Universe ──────────────────────────────────────────────────
-    INIT_STATIONS:          10,
+    INIT_STATIONS:          5,
     STATION_SPREAD:         8000,  // initial universe radius (units)
-    STATION_MIN_GAP:        1500,  // minimum gap between stations
-    STATION_MIN_DIST_ORIGIN: 2500, // stations won't spawn this close to (0,0)
+    STATION_MIN_GAP:        2500,  // minimum gap between stations
+    STATION_MIN_DIST_ORIGIN: 4000, // stations won't spawn this close to (0,0)
     EXPAND_THRESHOLD:       0.65,
-    EXPAND_ADD:             5,
+    EXPAND_ADD:             3,
 
     // ── Speed display ─────────────────────────────────────────────
     C: 120,   // "speed of light" = 120 units/s for display
